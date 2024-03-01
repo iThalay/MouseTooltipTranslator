@@ -1,131 +1,215 @@
 {
-	"appName": {
-		"message": "مترجم أدوات الماوس : Translate ChatGPT & Youtube Subtitle"
+	"MAIN______________________________________": {
+		"message": "MAIN                                      "
 	},
-	"appDesc": {
-		"message": "ترجمة ترجمة ترجمة Tooltip Mouse Mouseover باستخدام Google Translate"
-	},
-	"Main______________________________________": {
-		"message": "Main                                      "
+	"MAIN": {
+		"message": "MAIN"
 	},
 	"Mouse_Tooltip_Translator": {
 		"message": "Mouse Tooltip Translator"
 	},
 	"Show_Tooltip_When": {
-		"message": "Show Tooltip When"
+		"message": "متى يظهر تلميح الأداة"
 	},
-	"TTS_When": {
-		"message": "TTS When"
+	"Voice_When": {
+		"message": "متى يقرأ النص صوتيا"
 	},
 	"Translate_When": {
-		"message": "Translate When"
+		"message": "متى يترجم"
 	},
 	"Translate_From": {
-		"message": "Translate From"
+		"message": "الترجمة من"
 	},
 	"Translate_Into": {
-		"message": "Translate Into"
+		"message": "الترجمة إلى"
 	},
-	"Translator": {
-		"message": "Translator"
+	"Translator_Engine": {
+		"message": "محرك الترجمة"
 	},
-	"Text_Detect_Type": {
-		"message": "Text Detect Type"
-	},
-	"Detect_Type_Swap_Hold_Key": {
-		"message": "Detect Type Swap Hold Key"
-	},
-	"Translate_Writing_Hotkey": {
-		"message": "Translate Writing Hotkey"
+	"Mouseover_Text_Type": {
+		"message": "Mouseover Text Type"
 	},
 	"Writing_Language": {
-		"message": "Writing Language"
+		"message": "لغة الكتابة"
+	},
+	"OCR_Language": {
+		"message": "OCR Language"
 	},
 	"Reverse_Translate_Language": {
-		"message": "Reverse Translate Language"
+		"message": "عكس لغة الترجمة"
 	},
-	"Detect_PDF": {
-		"message": "Detect PDF"
+	"GRAPHIC______________________________________": {
+		"message": "GRAPHIC                                      "
 	},
-	"Detect_Youtube": {
-		"message": "Detect Youtube"
-	},
-	"OCR_When": {
-		"message": "OCR_When"
-	},
-	"OCR_Detection_Language": {
-		"message": "OCR Detection Language"
-	},
-	"Exclude_Language": {
-		"message": "Exclude Language"
-	},
-	"Exclude_Website": {
-		"message": "Exclude Website"
-	},
-	"Visual______________________________________": {
-		"message": "Visual                                      "
+	"GRAPHIC": {
+		"message": "GRAPHIC"
 	},
 	"Tooltip_Font_Size": {
-		"message": "Tooltip Font Size"
+		"message": "حجم خط تلميح الأداة"
 	},
 	"Tooltip_Width": {
-		"message": "Tooltip Width"
+		"message": "عرض تلميح الأداة"
 	},
 	"Tooltip_Distance": {
-		"message": "Tooltip Distance"
+		"message": "مسافة تلميح الأداة"
+	},
+	"Tooltip_Animation": {
+		"message": "Tooltip Animation"
 	},
 	"Tooltip_Position": {
-		"message": "Tooltip Position"
+		"message": "موضع تلميح الأداة"
 	},
 	"Tooltip_Text_Align": {
-		"message": "Tooltip Text Align"
+		"message": "محاذاة نص تلميح الأداة"
 	},
 	"Tooltip_Background_Blur": {
-		"message": "Tooltip Background Blur"
+		"message": "طمس الخلفية تلميح الأداة"
+	},
+	"Mouseover_Highlight_Text": {
+		"message": "Mouseover Highlight Text"
 	},
 	"Tooltip_Font_Color": {
-		"message": "Tooltip Font Color"
+		"message": "لون خط تلميح الأداة"
 	},
 	"Tooltip_Background_Color": {
-		"message": "Tooltip Background Color"
+		"message": "لون خلفية تلميح الأداة"
 	},
-	"Voice______________________________________": {
-		"message": "Voice                                      "
+	"Tooltip_Border_Color": {
+		"message": "Tooltip Border Color"
 	},
-	"TTS_Speed": {
-		"message": "TTS Speed"
+	"Mouseover_Text_Highlight_Color": {
+		"message": "Mouseover Text Highlight Color"
 	},
-	"TTS_Volume": {
-		"message": "TTS Volume"
+	"VOICE______________________________________": {
+		"message": "VOICE                                      "
+	},
+	"VOICE": {
+		"message": "VOICE"
+	},
+	"Voice_Volume": {
+		"message": "Voice Volume"
+	},
+	"Voice_Speed": {
+		"message": "Voice Speed"
+	},
+	"Voice_Target": {
+		"message": "Voice Target"
+	},
+	"Voice_Repeat": {
+		"message": "Voice Repeat"
 	},
 	"Voice_for_": {
-		"message": "Voice for "
+		"message": "صوت ل "
+	},
+	"ADVANCED______________________________________": {
+		"message": "متقدم                                      "
+	},
+	"ADVANCED": {
+		"message": "ADVANCED"
+	},
+	"Translate_Writing_When": {
+		"message": "Translate Writing When"
+	},
+	"OCR_When": {
+		"message": "متى يقع التعرف الضوئي على الحروف OCR"
+	},
+	"Detect_Subtitle": {
+		"message": "Detect Subtitle"
+	},
+	"Detect_PDF": {
+		"message": "كشف PDF"
+	},
+	"Mouseover_Pause_Subtitle": {
+		"message": "Mouseover Pause Subtitle"
+	},
+	"Mouseover_Text_Type_Swap_Key": {
+		"message": "Mouseover Text Type Swap Key"
+	},
+	"Tooltip_Info_Source_Text": {
+		"message": "Tooltip Info Source Text"
+	},
+	"Tooltip_Info_Source_Language": {
+		"message": "Tooltip Info Source Language"
+	},
+	"Tooltip_Info_Transliteration": {
+		"message": "Tooltip Info Transliteration"
+	},
+	"Tooltip_Interval_Time": {
+		"message": "Tooltip Interval Time"
+	},
+	"EXCLUDE______________________________________": {
+		"message": "استبعاد                                      "
+	},
+	"EXCLUDE": {
+		"message": "EXCLUDE"
+	},
+	"Exclude_Language": {
+		"message": "استبعاد اللغة"
+	},
+	"Exclude_Website": {
+		"message": "استبعاد موقع الويب"
 	},
 	"About______________________________________": {
-		"message": "About                                      "
+		"message": "عن                                      "
 	},
-	"Review_Page": {
-		"message": "Review Page"
+	"How_to_use": {
+		"message": "كيفية الاستعمال"
 	},
-	"Comment_on_this_extension": {
-		"message": "Comment on this extension"
-	},
-	"Source_code": {
-		"message": "Source code"
-	},
-	"Check_source_code_in_github": {
-		"message": "Check source code in github"
-	},
-	"Privacy_Policy": {
-		"message": "Privacy Policy"
-	},
-	"User_privacy_policy": {
-		"message": "User privacy policy"
+	"Check_how_to_use_this_extension": {
+		"message": "تحقق من كيفية استخدام هذه الإضافة"
 	},
 	"PDF_Viewer": {
-		"message": "PDF Viewer"
+		"message": "عارض PDF"
 	},
 	"Translate_local_PDF_file": {
-		"message": "Translate local PDF file"
+		"message": "ترجمة ملف PDF المحلي"
+	},
+	"Ebook_Reader": {
+		"message": "قارئ الكتاب الاليكتروني"
+	},
+	"Translate_local_ebook_file": {
+		"message": "ترجمة ملف الكتاب الإلكتروني المحلي"
+	},
+	"Twitter": {
+		"message": "Twitter"
+	},
+	"Retweet_twitter_post": {
+		"message": "Retweet twitter post"
+	},
+	"Review_Page": {
+		"message": "صفحة المراجعة"
+	},
+	"Comment_on_this_extension": {
+		"message": "التعليق على هذا التمديد"
+	},
+	"Source_code": {
+		"message": "كود المصدر"
+	},
+	"Check_source_code_in_github": {
+		"message": "تحقق من كود المصدر في Github"
+	},
+	"Privacy_Policy": {
+		"message": "سياسة الخصوصية"
+	},
+	"User_privacy_policy": {
+		"message": "سياسة خصوصية المستخدم"
+	},
+	"Review______________________________________": {
+		"message": "Review                                      "
+	},
+	"Review_this": {
+		"message": "Review this"
+	},
+	"Developer_love_criticism": {
+		"message": "Developer love criticism"
+	},
+	"Title______________________________________": {
+		"message": "عنوان                                      "
+	},
+	"appName": {
+		"message": "مترجم تلميح الأدوات بالفأرة"
+	},
+	"appDesc": {
+		"message": "ترجمة نص تحت مؤشر الفأرة باستخدام محركات ترجمة مختلفة من ضمنها Googleو Bingو Yandexو DeepLو Naver Papagoو. Support OCR, TTS, manga translator & pdf translator."
 	}
 }

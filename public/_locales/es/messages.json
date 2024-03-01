@@ -1,131 +1,215 @@
 {
-	"appName": {
-		"message": "Traductor de información sobre herramientas del mouse"
+	"MAIN______________________________________": {
+		"message": "MAIN                                      "
 	},
-	"appDesc": {
-		"message": "El traductor de información sobre herramientas de mouse traducir el texto de mouseover usando Google Translate"
-	},
-	"Main______________________________________": {
-		"message": "Main                                      "
+	"MAIN": {
+		"message": "MAIN"
 	},
 	"Mouse_Tooltip_Translator": {
-		"message": "Mouse Tooltip Translator"
+		"message": "Traductor Emergente con el Mouse"
 	},
 	"Show_Tooltip_When": {
-		"message": "Show Tooltip When"
+		"message": "Mostrar Ventana Emergente Cuando"
 	},
-	"TTS_When": {
-		"message": "TTS When"
+	"Voice_When": {
+		"message": "Voz Cuando"
 	},
 	"Translate_When": {
-		"message": "Translate When"
+		"message": "Traducir Cuando"
 	},
 	"Translate_From": {
-		"message": "Translate From"
+		"message": "Traducir Desde"
 	},
 	"Translate_Into": {
-		"message": "Translate Into"
+		"message": "Traducir En"
 	},
-	"Translator": {
-		"message": "Translator"
+	"Translator_Engine": {
+		"message": "Motor de Traducción"
 	},
-	"Text_Detect_Type": {
-		"message": "Text Detect Type"
-	},
-	"Detect_Type_Swap_Hold_Key": {
-		"message": "Detect Type Swap Hold Key"
-	},
-	"Translate_Writing_Hotkey": {
-		"message": "Translate Writing Hotkey"
+	"Mouseover_Text_Type": {
+		"message": "Tipo de Texto al Pasar el Mouse"
 	},
 	"Writing_Language": {
-		"message": "Writing Language"
+		"message": "Idioma de Escritura"
+	},
+	"OCR_Language": {
+		"message": "Idioma de OCR"
 	},
 	"Reverse_Translate_Language": {
-		"message": "Reverse Translate Language"
+		"message": "Idioma de Traducción Inversa"
 	},
-	"Detect_PDF": {
-		"message": "Detect PDF"
+	"GRAPHIC______________________________________": {
+		"message": "GRÁFICOS                                      "
 	},
-	"Detect_Youtube": {
-		"message": "Detect Youtube"
-	},
-	"OCR_When": {
-		"message": "OCR_When"
-	},
-	"OCR_Detection_Language": {
-		"message": "OCR Detection Language"
-	},
-	"Exclude_Language": {
-		"message": "Exclude Language"
-	},
-	"Exclude_Website": {
-		"message": "Exclude Website"
-	},
-	"Visual______________________________________": {
-		"message": "Visual                                      "
+	"GRAPHIC": {
+		"message": "GRÁFICOS"
 	},
 	"Tooltip_Font_Size": {
-		"message": "Tooltip Font Size"
+		"message": "Tamaño de Fuente de la Ventana Emergente"
 	},
 	"Tooltip_Width": {
-		"message": "Tooltip Width"
+		"message": "Ancho de la Ventana Emergente"
 	},
 	"Tooltip_Distance": {
-		"message": "Tooltip Distance"
+		"message": "Distancia de la Ventana Emergente"
+	},
+	"Tooltip_Animation": {
+		"message": "Animación de la Ventana Emergente"
 	},
 	"Tooltip_Position": {
-		"message": "Tooltip Position"
+		"message": "Posición de la Ventana Emergente"
 	},
 	"Tooltip_Text_Align": {
-		"message": "Tooltip Text Align"
+		"message": "Alineación de Texto de la Ventana Emergente"
 	},
 	"Tooltip_Background_Blur": {
-		"message": "Tooltip Background Blur"
+		"message": "Desenfoque de Fondo de la Ventana Emergente"
+	},
+	"Mouseover_Highlight_Text": {
+		"message": "Resaltar Texto al Pasar el Mouse"
 	},
 	"Tooltip_Font_Color": {
-		"message": "Tooltip Font Color"
+		"message": "Color de la Fuente de la Ventana Emergente"
 	},
 	"Tooltip_Background_Color": {
-		"message": "Tooltip Background Color"
+		"message": "Color del Fondo de la Ventana Emergente"
 	},
-	"Voice______________________________________": {
-		"message": "Voice                                      "
+	"Tooltip_Border_Color": {
+		"message": "Color de los bordes de la Ventana Emergente"
 	},
-	"TTS_Speed": {
-		"message": "TTS Speed"
+	"Mouseover_Text_Highlight_Color": {
+		"message": "Color de Resaltado de Texto al Pasar el Mouse"
 	},
-	"TTS_Volume": {
-		"message": "TTS Volume"
+	"VOICE______________________________________": {
+		"message": "VOZ                                      "
+	},
+	"VOICE": {
+		"message": "VOZ"
+	},
+	"Voice_Volume": {
+		"message": "Volumen de Voz"
+	},
+	"Voice_Speed": {
+		"message": "Velocidad de Voz"
+	},
+	"Voice_Target": {
+		"message": "Objectivo de Voz"
+	},
+	"Voice_Repeat": {
+		"message": "Repetir Voz"
 	},
 	"Voice_for_": {
-		"message": "Voice for "
+		"message": "Voz para "
+	},
+	"ADVANCED______________________________________": {
+		"message": "AVANZADO                                      "
+	},
+	"ADVANCED": {
+		"message": "AVANZADO"
+	},
+	"Translate_Writing_When": {
+		"message": "Traducir Escritura Cuando"
+	},
+	"OCR_When": {
+		"message": "OCR Cuando"
+	},
+	"Detect_Subtitle": {
+		"message": "Detectar Subtítulo"
+	},
+	"Detect_PDF": {
+		"message": "Detectar PDF"
+	},
+	"Mouseover_Pause_Subtitle": {
+		"message": "Pausar Subtítulo al Pasar el Mouse"
+	},
+	"Mouseover_Text_Type_Swap_Key": {
+		"message": "Tecla de Cambio de Tipo de Texto al Pasar el Mouse"
+	},
+	"Tooltip_Info_Source_Text": {
+		"message": "Texto de Fuente de Información de la Ventana Emergente"
+	},
+	"Tooltip_Info_Source_Language": {
+		"message": "Idioma de Fuente de Información de la Ventana Emergente"
+	},
+	"Tooltip_Info_Transliteration": {
+		"message": "Transliteración de Información de la Ventana Emergente"
+	},
+	"Tooltip_Interval_Time": {
+		"message": "Tiempo de Intervalo de la Ventana Emergente"
+	},
+	"EXCLUDE______________________________________": {
+		"message": "EXCLUIR                                      "
+	},
+	"EXCLUDE": {
+		"message": "EXCLUIR"
+	},
+	"Exclude_Language": {
+		"message": "Excluir Idioma"
+	},
+	"Exclude_Website": {
+		"message": "Excluir Sitio Web"
 	},
 	"About______________________________________": {
-		"message": "About                                      "
+		"message": "Acerca de                                      "
 	},
-	"Review_Page": {
-		"message": "Review Page"
+	"How_to_use": {
+		"message": "Como usar"
 	},
-	"Comment_on_this_extension": {
-		"message": "Comment on this extension"
-	},
-	"Source_code": {
-		"message": "Source code"
-	},
-	"Check_source_code_in_github": {
-		"message": "Check source code in github"
-	},
-	"Privacy_Policy": {
-		"message": "Privacy Policy"
-	},
-	"User_privacy_policy": {
-		"message": "User privacy policy"
+	"Check_how_to_use_this_extension": {
+		"message": "Consulta cómo usar esta extensión"
 	},
 	"PDF_Viewer": {
-		"message": "PDF Viewer"
+		"message": "Visor de PDF"
 	},
 	"Translate_local_PDF_file": {
-		"message": "Translate local PDF file"
+		"message": "Traducir archivo PDF local"
+	},
+	"Ebook_Reader": {
+		"message": "Lector de Libros Electrónicos"
+	},
+	"Translate_local_ebook_file": {
+		"message": "Traducir archivo de libro electrónico local"
+	},
+	"Twitter": {
+		"message": "Twitter"
+	},
+	"Retweet_twitter_post": {
+		"message": "Retwittear publicación de Twitter"
+	},
+	"Review_Page": {
+		"message": "Página de Reseñas"
+	},
+	"Comment_on_this_extension": {
+		"message": "Comentar sobre esta extensión"
+	},
+	"Source_code": {
+		"message": "Código Fuente"
+	},
+	"Check_source_code_in_github": {
+		"message": "Ver el código fuente en GitHub"
+	},
+	"Privacy_Policy": {
+		"message": "Política de Privacidad"
+	},
+	"User_privacy_policy": {
+		"message": "Política de privacidad del usuario"
+	},
+	"Review______________________________________": {
+		"message": "Revisión                                      "
+	},
+	"Review_this": {
+		"message": "Revisar esto"
+	},
+	"Developer_love_criticism": {
+		"message": "El desarrollador ama las críticas"
+	},
+	"Title______________________________________": {
+		"message": "Título                                      "
+	},
+	"appName": {
+		"message": "Traductor Emergente con el Mouse para Educación"
+	},
+	"appDesc": {
+		"message": "El traductor de ventana emergente al pasar mouse utiliza Google Translate. Soporta OCR, TTS, Manga Translator & PDF Translator."
 	}
 }

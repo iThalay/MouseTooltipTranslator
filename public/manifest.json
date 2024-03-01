@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "0.1.75",
+  "version": "0.1.89",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
@@ -13,7 +13,7 @@
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval' ;  object-src 'none'"
   },
-  "permissions": ["storage", "tts", "tabs", "scripting", "contextMenus" ],
+  "permissions": ["storage", "tts", "tabs", "scripting", "contextMenus", "offscreen", "search"],
   "host_permissions": [
     "<all_urls>"
   ],
@@ -21,7 +21,7 @@
 
 
   "web_accessible_resources": [{
-    "resources": ["pdfjs/web/viewer.html", "ocr.html", "opencvHandler.html", "youtube.js"],
+    "resources": ["pdfjs/web/viewer.html", "ocr.html", "opencvHandler.html", "videoHandler.js","googleDocInject.js","subtitle.js"],
     "matches": ["<all_urls>"]
   }],
   "sandbox": {
@@ -35,19 +35,29 @@
         "default": "Ctrl+Shift+1"
       },
       "description": "Copy Translated Text"
+    },
+    "save-translation": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2"
+      },
+      "description": "Save Translation"
     }
   },
+  "omnibox": { "keyword" : "/" },
 
 
 
 
-  "content_scripts": [{
-    "js": ["contentScript.js"],
-    "css": ["bootstrapcustom.min.css"],
-    "run_at": "document_idle",
-    "all_frames": true,
-    "matches": ["<all_urls>"]
-  }],
+  "content_scripts": [
+    {
+      "js": ["contentScript.js"],
+      "css": ["tippy.css"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "matches": ["<all_urls>"],
+      "match_about_blank": true
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   },

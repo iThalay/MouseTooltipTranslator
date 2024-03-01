@@ -22,50 +22,85 @@ localeList = ['ar', 'am', 'bg', 'bn', 'ca', 'cs', 'da', 'de', 'el', 'en', 'en_GB
 translateLangCodeDict = {"zh_CN": "zh-CN", "zh_TW": "zh-TW"}
 i18List = [
 
-    "Main                                      ",
+    "MAIN                                      ",
+    "MAIN",
     "Mouse Tooltip Translator",
     "Show Tooltip When",
-    "TTS When",
+    "Voice When",
     "Translate When",
     "Translate From",
     "Translate Into",
-    "Translator",
-    "Text Detect Type",
-    "Detect Type Swap Hold Key",
-    "Translate Writing Hotkey",
+    "Translator Engine",
+    "Mouseover Text Type",
     "Writing Language",
+    "OCR Language",
     "Reverse Translate Language",
-    "Detect PDF",
-    "Detect Youtube",
-    "OCR_When",
-    "OCR Detection Language",
-    "Exclude Language",
-    "Exclude Website",
 
-    "Visual                                      ",
+    "GRAPHIC                                      ",
+    "GRAPHIC",
     "Tooltip Font Size",
     "Tooltip Width",
     "Tooltip Distance",
+    "Tooltip Animation",
     "Tooltip Position",
     "Tooltip Text Align",
     "Tooltip Background Blur",
+    "Mouseover Highlight Text",
     "Tooltip Font Color",
     "Tooltip Background Color",
+    "Tooltip Border Color",
+    "Mouseover Text Highlight Color",
 
-    "Voice                                      ",
-    "TTS Speed",
-    "TTS Volume",
+    "VOICE                                      ",
+    "VOICE",
+    "Voice Volume",
+    "Voice Speed",
+    "Voice Target",
+    "Voice Repeat",
     "Voice for ",
 
+    "ADVANCED                                      ",
+    "ADVANCED",
+    "Translate Writing When",
+    "OCR When",
+    "Detect Subtitle",
+    "Detect PDF",
+    "Mouseover Pause Subtitle",
+    "Mouseover Text Type Swap Key",
+    "Tooltip Info Source Text",
+    "Tooltip Info Source Language",
+    "Tooltip Info Transliteration",
+    "Tooltip Interval Time",
+
+    "EXCLUDE                                      ",
+    "EXCLUDE",
+    "Exclude Language",
+    "Exclude Website",
+
     "About                                      ",
+    "How to use",
+    "Check how to use this extension",
+    "PDF Viewer",
+    "Translate local PDF file",
+    "Ebook Reader",
+    "Translate local ebook file",
+    "Twitter",
+    "Retweet twitter post",
     "Review Page",
     "Comment on this extension",
     "Source code",
     "Check source code in github",
     "Privacy Policy",
     "User privacy policy",
-    "PDF Viewer",
-    "Translate local PDF file"
+
+    "Review                                      ",
+    "Review this",
+    "Developer love criticism",
+
+
+    "Title                                      ",
+
+
 ]
 
 
@@ -140,7 +175,7 @@ def insertI18Json(locale):
 
 
 def recorderJson(jsonData):
-    orderedList = ["appName", "appDesc"] + getI18IdList()
+    orderedList = getI18IdList() + ["appName", "appDesc"]
     newDict = {}
     for name in orderedList:
         newDict[name] = jsonData[name]

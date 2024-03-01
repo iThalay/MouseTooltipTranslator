@@ -1,26 +1,31 @@
-import Tesseract from "tesseract.js";
-import { waitUntil, WAIT_FOREVER } from "async-wait-until";
-import * as util from "../util.js";
-
 //ocr process, listen image from contents js and respond text
 //1. listen to get image from iframe host
 //2. use tesseract to process ocr to image to get text
 //3. resend result to host
 
+import Tesseract from "tesseract.js";
+import { waitUntil, WAIT_FOREVER } from "async-wait-until";
+import browser from "webextension-polyfill";
+
+var schedulerList = {};
+var loadingList = {};
+
 window.addEventListener(
   "message",
-  async function({ data }) {
+  async function ({ data }) {
     if (data.type === "ocr") {
       doOcr(data);
-    } else if (data.type === "initTesseract") {
-      initTesseract(data);
+    } else if (data.type === "init") {
+      await getScheduler(data.lang, data.mode);
+      response({
+        windowPostMessageProxy: data.windowPostMessageProxy,
+      });
     }
   },
   false
 );
 
 // ocr ===========================================================
-var schedulerList = {};
 
 async function doOcr(request) {
   var type = "ocrSuccess";
@@ -29,7 +34,6 @@ async function doOcr(request) {
   try {
     var canvas = await loadImage(request.base64Url);
     // document.body.appendChild(canvas);
-
     ocrData = await useTesseract(
       canvas,
       request.lang,
@@ -68,13 +72,12 @@ function loadImage(url) {
 
 //create ocr worker and processs ocr
 function useTesseract(image, lang, rectangles, mode) {
-  return new Promise(async function(resolve, reject) {
+  return new Promise(async function (resolve, reject) {
     try {
       var data = [];
       var scheduler = await getScheduler(lang, mode);
-
       // //ocr on plain image
-      if (mode == "auto") {
+      if (mode.includes("auto")) {
         var d = await scheduler.addJob("recognize", image);
         data = [d];
 
@@ -97,58 +100,52 @@ function useTesseract(image, lang, rectangles, mode) {
   });
 }
 async function getScheduler(lang, mode) {
-  await waitUntil(() => schedulerList[lang + "_" + mode], {
-    timeout: WAIT_FOREVER,
-  });
-  return schedulerList[lang + "_" + mode];
-}
+  var id = lang + "_" + mode;
 
-async function loadScheduler(lang, mode) {
-  if (schedulerList[lang + "_" + mode]) {
-    return schedulerList[lang + "_" + mode];
+  if (schedulerList[id]) {
+    return schedulerList[id];
+  } else if (loadingList[id]) {
+    await waitUntil(() => schedulerList[id], {
+      timeout: WAIT_FOREVER,
+    });
+    return schedulerList[id];
   }
+  loadingList[id] = true;
 
-  var isLocal = lang == "jpn_vert" || lang == "jpn_vert_old";
   var scheduler = Tesseract.createScheduler();
-  var workerIndexList = mode == "auto" ? [0] : [0, 1];
+  var workerIndexList = mode.includes("auto") ? [0] : [0, 1, 2, 3, 4];
+  var workerPath = browser.runtime.getURL("/tesseract/worker.min.js");
+  var corePath = browser.runtime.getURL(
+    "/tesseract/tesseract-core-lstm.wasm.js"
+  );
 
+  var tessedit_pageseg_mode = mode.includes("auto")
+    ? Tesseract.PSM.AUTO_ONLY
+    : lang.includes("vert")
+    ? Tesseract.PSM.SINGLE_BLOCK_VERT_TEXT
+    : Tesseract.PSM.SINGLE_BLOCK;
   await Promise.all(
     workerIndexList.map(async (i) => {
-      var worker = await Tesseract.createWorker({
+      var worker = await Tesseract.createWorker(lang, 1, {
         workerBlobURL: false,
-        workerPath: chrome.runtime.getURL("/tesseract/worker.min.js"),
-        corePath: chrome.runtime.getURL("/tesseract/tesseract-core.wasm.js"),
-        langPath: isLocal
-          ? chrome.runtime.getURL("/traindata")
-          : "https://raw.githubusercontent.com/naptha/tessdata/gh-pages/4.0.0", //https://github.com/zodiac3539/jpn_vert
-        gzip: isLocal ? false : true,
-        // logger: m => console.log(m), // Add logger here
+        workerPath,
+        corePath,
+        // logger: (m) => console.log(m), // Add logger here
       });
-      await worker.loadLanguage(lang);
-      await worker.initialize(lang);
+
       await worker.setParameters({
         user_defined_dpi: "100",
-        tessedit_pageseg_mode:
-          mode == "auto"
-            ? Tesseract.PSM.AUTO_ONLY
-            : Tesseract.PSM.SINGLE_BLOCK_VERT_TEXT,
+        tessedit_pageseg_mode,
       });
+
       scheduler.addWorker(worker);
     })
   );
 
-  schedulerList[lang + "_" + mode] = scheduler;
-  return schedulerList[lang + "_" + mode];
+  schedulerList[id] = scheduler;
+  return schedulerList[id];
 }
 
 function response(data) {
-  util.postMessage(data);
-}
-
-function initTesseract(request) {
-  loadScheduler(request.lang, "auto");
-  loadScheduler(request.lang, "bbox");
-  response({
-    windowPostMessageProxy: request.windowPostMessageProxy,
-  });
+  window.parent.postMessage(data, "*");
 }

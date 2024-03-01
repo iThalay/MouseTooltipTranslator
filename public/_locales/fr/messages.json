@@ -1,131 +1,215 @@
 {
-	"appName": {
-		"message": "Traducteur info-bulle de souris"
+	"MAIN______________________________________": {
+		"message": "MAIN                                      "
 	},
-	"appDesc": {
-		"message": "Traducteur d'info-bulle de souris traduire le texte de la souris à l'aide de Google Translate"
-	},
-	"Main______________________________________": {
-		"message": "Main                                      "
+	"MAIN": {
+		"message": "MAIN"
 	},
 	"Mouse_Tooltip_Translator": {
-		"message": "Mouse Tooltip Translator"
+		"message": "Traduction Souris Info-bulle"
 	},
 	"Show_Tooltip_When": {
-		"message": "Show Tooltip When"
+		"message": "Afficher l'infobulle lorsque"
 	},
-	"TTS_When": {
-		"message": "TTS When"
+	"Voice_When": {
+		"message": "TTS Quand"
 	},
 	"Translate_When": {
-		"message": "Translate When"
+		"message": "Traduire quand"
 	},
 	"Translate_From": {
-		"message": "Translate From"
+		"message": "Traduire de"
 	},
 	"Translate_Into": {
-		"message": "Translate Into"
+		"message": "Traduire en"
 	},
-	"Translator": {
-		"message": "Translator"
+	"Translator_Engine": {
+		"message": "Moteur de traduction"
 	},
-	"Text_Detect_Type": {
-		"message": "Text Detect Type"
-	},
-	"Detect_Type_Swap_Hold_Key": {
-		"message": "Detect Type Swap Hold Key"
-	},
-	"Translate_Writing_Hotkey": {
-		"message": "Translate Writing Hotkey"
+	"Mouseover_Text_Type": {
+		"message": "Mouseover Text Type"
 	},
 	"Writing_Language": {
-		"message": "Writing Language"
+		"message": "Langue d'écriture"
+	},
+	"OCR_Language": {
+		"message": "OCR Language"
 	},
 	"Reverse_Translate_Language": {
-		"message": "Reverse Translate Language"
+		"message": "Langue de traduction inversée"
 	},
-	"Detect_PDF": {
-		"message": "Detect PDF"
+	"GRAPHIC______________________________________": {
+		"message": "GRAPHIC                                      "
 	},
-	"Detect_Youtube": {
-		"message": "Detect Youtube"
-	},
-	"OCR_When": {
-		"message": "OCR_When"
-	},
-	"OCR_Detection_Language": {
-		"message": "OCR Detection Language"
-	},
-	"Exclude_Language": {
-		"message": "Exclude Language"
-	},
-	"Exclude_Website": {
-		"message": "Exclude Website"
-	},
-	"Visual______________________________________": {
-		"message": "Visual                                      "
+	"GRAPHIC": {
+		"message": "GRAPHIC"
 	},
 	"Tooltip_Font_Size": {
-		"message": "Tooltip Font Size"
+		"message": "Taille de la police de l'infobulle"
 	},
 	"Tooltip_Width": {
-		"message": "Tooltip Width"
+		"message": "Largeur de l'infobulle"
 	},
 	"Tooltip_Distance": {
-		"message": "Tooltip Distance"
+		"message": "Distance de l'infobulle"
+	},
+	"Tooltip_Animation": {
+		"message": "Tooltip Animation"
 	},
 	"Tooltip_Position": {
-		"message": "Tooltip Position"
+		"message": "Position de l'infobulle"
 	},
 	"Tooltip_Text_Align": {
-		"message": "Tooltip Text Align"
+		"message": "Alignement du texte de l'infobulle"
 	},
 	"Tooltip_Background_Blur": {
-		"message": "Tooltip Background Blur"
+		"message": "Flou de l'arrière-plan de la bulle d'aide"
+	},
+	"Mouseover_Highlight_Text": {
+		"message": "Mouseover Highlight Text"
 	},
 	"Tooltip_Font_Color": {
-		"message": "Tooltip Font Color"
+		"message": "Couleur de la police de l'infobulle"
 	},
 	"Tooltip_Background_Color": {
-		"message": "Tooltip Background Color"
+		"message": "Couleur d'arrière-plan de l'infobulle"
 	},
-	"Voice______________________________________": {
-		"message": "Voice                                      "
+	"Tooltip_Border_Color": {
+		"message": "Tooltip Border Color"
 	},
-	"TTS_Speed": {
-		"message": "TTS Speed"
+	"Mouseover_Text_Highlight_Color": {
+		"message": "Mouseover Text Highlight Color"
 	},
-	"TTS_Volume": {
-		"message": "TTS Volume"
+	"VOICE______________________________________": {
+		"message": "VOICE                                      "
+	},
+	"VOICE": {
+		"message": "VOICE"
+	},
+	"Voice_Volume": {
+		"message": "Voice Volume"
+	},
+	"Voice_Speed": {
+		"message": "Voice Speed"
+	},
+	"Voice_Target": {
+		"message": "Voice Target"
+	},
+	"Voice_Repeat": {
+		"message": "Voice Repeat"
 	},
 	"Voice_for_": {
-		"message": "Voice for "
+		"message": "La voix pour "
+	},
+	"ADVANCED______________________________________": {
+		"message": "AVANCÉ                                      "
+	},
+	"ADVANCED": {
+		"message": "ADVANCED"
+	},
+	"Translate_Writing_When": {
+		"message": "Translate Writing When"
+	},
+	"OCR_When": {
+		"message": "OCR Quand"
+	},
+	"Detect_Subtitle": {
+		"message": "Detect Subtitle"
+	},
+	"Detect_PDF": {
+		"message": "Détecter PDF"
+	},
+	"Mouseover_Pause_Subtitle": {
+		"message": "Mouseover Pause Subtitle"
+	},
+	"Mouseover_Text_Type_Swap_Key": {
+		"message": "Mouseover Text Type Swap Key"
+	},
+	"Tooltip_Info_Source_Text": {
+		"message": "Tooltip Info Source Text"
+	},
+	"Tooltip_Info_Source_Language": {
+		"message": "Tooltip Info Source Language"
+	},
+	"Tooltip_Info_Transliteration": {
+		"message": "Tooltip Info Transliteration"
+	},
+	"Tooltip_Interval_Time": {
+		"message": "Tooltip Interval Time"
+	},
+	"EXCLUDE______________________________________": {
+		"message": "EXCLURE                                      "
+	},
+	"EXCLUDE": {
+		"message": "EXCLUDE"
+	},
+	"Exclude_Language": {
+		"message": "Exclure la langue"
+	},
+	"Exclude_Website": {
+		"message": "Exclure le site Web"
 	},
 	"About______________________________________": {
-		"message": "About                                      "
+		"message": "À propos                                      "
 	},
-	"Review_Page": {
-		"message": "Review Page"
+	"How_to_use": {
+		"message": "Comment utiliser"
 	},
-	"Comment_on_this_extension": {
-		"message": "Comment on this extension"
-	},
-	"Source_code": {
-		"message": "Source code"
-	},
-	"Check_source_code_in_github": {
-		"message": "Check source code in github"
-	},
-	"Privacy_Policy": {
-		"message": "Privacy Policy"
-	},
-	"User_privacy_policy": {
-		"message": "User privacy policy"
+	"Check_how_to_use_this_extension": {
+		"message": "Vérifiez comment utiliser cette extension"
 	},
 	"PDF_Viewer": {
-		"message": "PDF Viewer"
+		"message": "Visionneuse PDF"
 	},
 	"Translate_local_PDF_file": {
-		"message": "Translate local PDF file"
+		"message": "Traduire un fichier PDF local"
+	},
+	"Ebook_Reader": {
+		"message": "Ebook Reader"
+	},
+	"Translate_local_ebook_file": {
+		"message": "Translate local ebook file"
+	},
+	"Twitter": {
+		"message": "Twitter"
+	},
+	"Retweet_twitter_post": {
+		"message": "Retweet twitter post"
+	},
+	"Review_Page": {
+		"message": "Page de révision"
+	},
+	"Comment_on_this_extension": {
+		"message": "Commentez cette extension"
+	},
+	"Source_code": {
+		"message": "Code source"
+	},
+	"Check_source_code_in_github": {
+		"message": "Vérifier le code source sur github"
+	},
+	"Privacy_Policy": {
+		"message": "Politique de confidentialité"
+	},
+	"User_privacy_policy": {
+		"message": "Politique de confidentialité des utilisateurs"
+	},
+	"Review______________________________________": {
+		"message": "Review                                      "
+	},
+	"Review_this": {
+		"message": "Review this"
+	},
+	"Developer_love_criticism": {
+		"message": "Developer love criticism"
+	},
+	"Title______________________________________": {
+		"message": "Titre                                      "
+	},
+	"appName": {
+		"message": "Traduction Souris Info-bulle : Learn Language"
+	},
+	"appDesc": {
+		"message": "Traduire le texte pointé par la souris à l'aide de différent moteur de traduction. Support OCR, TTS, manga translator & pdf translator."
 	}
 }
