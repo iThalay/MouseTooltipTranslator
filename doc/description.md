@@ -19,9 +19,53 @@ Mouseover Translate Any Language At Once
 English, Russian, Japanese, Chinese and so on
 
 # Change Log
+- 0.1.143
+  - Performance enhance on mouseover (contributed by skfh82)
+  - Fix pdf key conflict (contributed by tofuthefirst)
+  - Redesign Intro page (contributed by neoOpus)
+- 0.1.142
+  - Fix css conflict on koreatimes (request by prvDevs)
+- 0.1.141
+  - Fix tts conflict with low browser version (request by Курс Курсович)
+- 0.1.140
+  - Add speech panel graphic option
+- 0.1.139
+  - Remove speech recognition from opera (request by Fırat Akbıyık)
+  - add speech recognition panel
+- 0.1.138
+  - Fix mouseover detect performance issue (request by eSKej)
+  - Fix google image load
+- 0.1.137
+  - Fix reddit site conflict
+- 0.1.136
+  - Fix Japanese furigana recognition (request by cspotcode)
+  - Add speech recognition translator
+- 0.1.135
+  - Add tts run when only select (request by IsemicolonI)
+  - Add word dictionary off option (request by dod storm)
+- 0.1.134
+  - Fix tooltip container conflict
+- 0.1.134
+  - English AU locale (contributed by CreeperYeeter2)
+  - fix RTL UI
+  - fix edge select conflict
+- 0.1.133
+  - fix youtube subtitle conflict
+- 0.1.132
+  - fix copy key conflict with tts voice(request by ldrahnik)
+- 0.1.131
+  - fix tts voice overlap(request by Nebras)
+- 0.1.130
+  - fix review notify
+  - hide mouseover text error (contributed by gignac-cha)
+- 0.1.129
+  - fix korea ocr manga lang size
 - 0.1.128
   - Spanish locale (contributed by di4m0nds)
   - Turkish locale (contributed by Nejdet ACAR)
+  - China locale (contributed by SFGFDSD)
+  - add flashcard
+  - swap google translate default engine
 - 0.1.127
   - fix tooltip hide conflict
 - 0.1.126

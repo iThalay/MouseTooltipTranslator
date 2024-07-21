@@ -24,9 +24,20 @@ import "vuetify/dist/vuetify.min.css"; //vuetify css
 // input mask
 import { vMaska } from "maska";
 
+import * as util from "/src/util";
+
+var lang = util.getDefaultLang();
+var messages = {};
+messages[lang] = { open: "Open", close: "Close" };
+
 const vuetify = createVuetify({
   components,
   directives,
+  locale: {
+    locale: lang,
+    fallback: "en",
+    messages,
+  },
   theme: {
     options: {
       customProperties: true,

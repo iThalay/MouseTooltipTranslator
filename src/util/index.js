@@ -5,6 +5,12 @@ import { iso6393To1 } from "iso-639-3";
 import { francAll } from "franc";
 import { parse } from "bcp-47";
 import { waitUntil, WAIT_FOREVER } from "async-wait-until";
+var browser;
+try {
+  browser = require("webextension-polyfill");
+} catch (error) {}
+import delay from "delay";
+
 import { Setting } from "./setting.js";
 
 import {
@@ -12,13 +18,6 @@ import {
   bingTtsVoiceList,
   googleTranslateTtsLangList,
 } from "/src/util/lang.js";
-
-var browser;
-try {
-  browser = require("webextension-polyfill");
-} catch (error) {
-  console.log(error);
-}
 
 export var defaultData = {
   showTooltipWhen: "always",
@@ -32,19 +31,14 @@ export var defaultData = {
   ocrLang: "jpn_vert",
   translateReverseTarget: "null",
 
-  //advanced
-  keyDownTranslateWriting: "AltRight",
-  keyDownOCR: "ShiftLeft",
-  detectSubtitle: "dualsub",
-  detectPDF: "true",
-  mouseoverPauseSubtitle: "true",
-  keyDownMouseoverTextSwap: "null",
-  tooltipInfoSourceText: "false",
-  tooltipInfoSourceLanguage: "false",
-  tooltipInfoTransliteration: "false",
+  // voice
+  voiceVolume: "1.0",
+  voiceRate: "1.0",
+  voiceTarget: "source",
+  voiceRepeat: "1",
 
   // graphic
-  tooltipFontSize: "14",
+  tooltipFontSize: "18",
   tooltipWidth: "200",
   tooltipDistance: "20",
   tooltipAnimation: "fade",
@@ -57,11 +51,32 @@ export var defaultData = {
   tooltipBorderColor: "#ffffff00",
   mouseoverTextHighlightColor: "#21dc6d40",
 
-  // voice
-  voiceVolume: "1.0",
-  voiceRate: "1.0",
-  voiceTarget: "source",
-  voiceRepeat: "1",
+  // speech
+  speechRecognitionLanguage: "en-US",
+  keySpeechRecognition: "ControlRight",
+  voicePanelTranslateLanguage: "default",
+  voicePanelTextTarget: "sourcetarget",
+  voicePanelPadding: "20",
+  voicePanelTextAlign: "center",
+  voicePanelSourceFontSize: "18",
+  voicePanelTargetFontSize: "18",
+  voicePanelSourceFontColor: "#ffffffff",
+  voicePanelTargetFontColor: "#ffffffff",
+  voicePanelSourceBorderColor: "#000000b8",
+  voicePanelTargetBorderColor: "#000000b8",
+  voicePanelBackgroundColor: "#002918",
+
+  //advanced
+  keyDownTranslateWriting: "AltRight",
+  keyDownOCR: "ShiftLeft",
+  detectSubtitle: "dualsub",
+  detectPDF: "true",
+  mouseoverPauseSubtitle: "true",
+  keyDownMouseoverTextSwap: "null",
+  tooltipInfoSourceText: "false",
+  tooltipInfoSourceLanguage: "false",
+  tooltipInfoTransliteration: "false",
+  tooltipWordDictionary: "true",
 
   // exclude
   langExcludeList: [],
@@ -74,19 +89,12 @@ export var defaultData = {
   ignoreCallbackOptionList: ["historyList"],
   popupCount: "0",
   langPriority: { auto: 9999999, null: 9999999 },
-  tooltipIntervalTime: "0.7",
+  tooltipIntervalTime: "0.1",
 
-  cardListen: [],
+  cardPlayMeta: ["image"],
   cardTagSelected: [],
   deckStatus: {},
-  deck: [],
-  stagedDeckStatus: 0,
-  cardNewStartLen: 0,
-  cardReviewStartLen: 0,
-  cardLearningStartLen: 0,
-  cardNewFinLen: 0,
-  cardReviewFinLen: 0,
-  cardAllFinLen: 0,
+  cardLen: {},
 };
 
 var reviewUrlJson = {
@@ -98,6 +106,9 @@ var reviewUrlJson = {
 
 export var writingField =
   'input[type="text"], input[type="search"], input:not([type]), textarea, [contenteditable], [contenteditable="true"], [role=textbox], [spellcheck]';
+
+var listenEngine;
+var listening = false;
 
 //setting util======================================
 
@@ -318,6 +329,9 @@ export function filterEmoji(word) {
     /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
     ""
   );
+}
+export function filterHtmlTag(word) {
+  return word.replace(/([<>])/g, "");
 }
 
 export function truncate(str, n) {
@@ -574,11 +588,6 @@ export function isExtensionOnline() {
   return browser.runtime?.id;
 }
 
-export function openSettingPage() {
-  browser.tabs.create({
-    url: "chrome://extensions/?id=" + browser.runtime?.id,
-  });
-}
 export function getUrlExt(path) {
   return browser.runtime.getURL(path);
 }
@@ -639,15 +648,20 @@ export function getDateNow() {
   return new Date().toJSON();
 }
 export function getDateNowNoTime() {
-  const date = new Date();
-  date.setHours(0, 0, 0, 0);
-  return date.toJSON();
+  var date = new Date(new Date().toDateString());
+  return date.toString();
 }
 export function addDay(date, day) {
   date = new Date(date);
   date.setDate(date.getDate() + day);
-  return date.toJSON();
+  return date.toString();
 }
+export function adhour(date, hour) {
+  date = new Date(date);
+  date.setHours(date.getHours() + hour);
+  return date.toString();
+}
+
 export function getNextDay(day) {
   return addDay(getDateNowNoTime(), day);
 }
@@ -676,6 +690,23 @@ export function isLocalFileUrl(url) {
   return /^file:\/\//.test(url);
 }
 
+export function isCharKey(key) {
+  return /Key|Digit|Numpad/.test(key);
+}
+
+export function isEdge() {
+  return /Edg\//.test(window.navigator.userAgent);
+}
+
+export function extractTextFromHtml(html) {
+  filterJapanFurigana(html);
+  return html.textContent;
+}
+
+export function filterJapanFurigana(html) {
+  html.querySelectorAll("ruby>rt").forEach((e) => e.remove());
+}
+
 //send to background.js for background processing  ===========================================================================
 
 export async function requestTranslate(
@@ -699,7 +730,8 @@ export async function requestTTS(
   sourceText,
   sourceLang,
   targetText,
-  targetLang
+  targetLang,
+  timestamp = Date.now()
 ) {
   return await sendMessage({
     type: "tts",
@@ -708,6 +740,7 @@ export async function requestTTS(
       sourceLang,
       targetText,
       targetLang,
+      timestamp,
     },
   });
 }
@@ -724,7 +757,11 @@ export async function requestImage(text) {
   });
 }
 
-export async function requestTTSSingle(sourceText, sourceLang) {
+export async function requestTTSSingle(
+  sourceText,
+  sourceLang,
+  timestamp = Date.now()
+) {
   return await sendMessage({
     type: "tts",
     data: {
@@ -732,13 +769,17 @@ export async function requestTTSSingle(sourceText, sourceLang) {
       sourceLang,
       voiceTarget: "source",
       voiceRepeat: "1",
+      timestamp,
     },
   });
 }
 
-export async function requestStopTTS() {
+export async function requestStopTTS(timestamp) {
   return await sendMessage({
     type: "stopTTS",
+    data: {
+      timestamp,
+    },
   });
 }
 
@@ -771,4 +812,172 @@ export async function requestBase64(url) {
   });
 }
 
-//
+export async function requestCreateOffscreen() {
+  return await sendMessage({
+    type: "createOffscreen",
+  });
+}
+
+export async function requestStartSpeechRecognitionOffscreen(lang) {
+  await requestCreateOffscreen();
+  return await sendMessage({
+    type: "startSpeechRecognition",
+    data: {
+      lang,
+    },
+  });
+}
+
+export async function requestStopSpeechRecognitionOffscreen() {
+  await requestCreateOffscreen();
+  return await sendMessage({
+    type: "stopSpeechRecognition",
+  });
+}
+
+export async function requestPlayTtsOffscreen(source, rate, volume, timestamp) {
+  return await sendMessage({
+    type: "playAudioOffscreen",
+    data: {
+      source,
+      rate,
+      volume,
+      timestamp,
+    },
+  });
+}
+
+export async function requestStopTtsOffscreen(timestamp) {
+  return await sendMessage({ type: "stopTTSOffscreen", data: { timestamp } });
+}
+
+//open side window =======================
+// Create the offscreen document
+export async function createOffscreen() {
+  try {
+    await browser?.offscreen?.createDocument({
+      url: "offscreen.html",
+      reasons: ["USER_MEDIA"],
+      justification: "TTS & Speech",
+    });
+  } catch (error) {
+    if (error.message.startsWith("Only a single offscreen")) {
+    } else {
+      console.log(error);
+    }
+  }
+}
+export async function removeOffscreen() {
+  return new Promise((resolve, reject) => {
+    browser.offscreen.closeDocument(() => resolve());
+  });
+}
+
+export async function openUrlAsPanel(url) {
+  url = getUrlExt(url);
+  await removePreviousTab(url);
+  openPanel(url);
+}
+function openPanel(url) {
+  var width = Math.round(screen.width * 0.5);
+  var height = Math.round(screen.height * 0.15);
+  var left = Math.round(screen.width / 2 - width / 2);
+  var top = Math.round(screen.height / 2 - height / 2);
+  browser.windows.create({
+    url,
+    type: "panel",
+    width,
+    height,
+    left,
+    top,
+  });
+}
+
+export async function removePreviousTab(url) {
+  var urlParsed = new URL(url);
+  var urlWithoutParam = urlParsed.origin + urlParsed.pathname;
+  var tabs = await browser.tabs.query({ url: urlWithoutParam });
+
+  for (const tab of tabs) {
+    if (url == tab.url) {
+      await browser.tabs.remove(tab.id);
+    }
+  }
+}
+
+export function openSettingPage() {
+  openPage(`chrome://extensions/?id=${browser.runtime?.id}`);
+}
+
+export function openAudioPermissionPage() {
+  openPage(`chrome://settings/content/microphone`);
+}
+
+export function openPage(url) {
+  browser.tabs.create({ url });
+}
+
+// speech recognition================================
+
+export function initSpeechRecognition(recognitionCallbackFn, finCallbackFn) {
+  // future plan, migration to background service worker
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    return;
+  }
+  listenEngine = new SpeechRecognition();
+  listenEngine.continuous = true;
+  listenEngine.interimResults = true;
+  listenEngine.onstart = function () {
+    listening = true;
+  };
+  listenEngine.onerror = function (event) {
+    console.log(event);
+  };
+  listenEngine.onend = function () {
+    listening = false;
+    finCallbackFn();
+  };
+
+  listenEngine.onresult = function (event) {
+    var isFinal = false;
+    var interimTranscript = "";
+    var finalTranscript = "";
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        finalTranscript = event.results[i][0].transcript;
+        isFinal = true;
+      } else {
+        interimTranscript += event.results[i][0].transcript;
+      }
+    }
+    recognitionCallbackFn(finalTranscript || interimTranscript, isFinal);
+    // console.log("-------------------------------");
+    // console.log(finalTranscript);
+    // console.log(interimTranscript);
+  };
+}
+
+export function setSpeechRecognitionLang(lang) {
+  if (!listenEngine) {
+    return;
+  }
+  listenEngine.lang = lang;
+}
+
+export function stopSpeechRecognition() {
+  if (!listening) {
+    return;
+  }
+  // console.log("stop listen");
+  listenEngine?.stop();
+}
+
+export function startSpeechRecognition() {
+  if (listening || !listenEngine) {
+    return;
+  }
+  // console.log("start listen");
+  listenEngine?.start();
+}

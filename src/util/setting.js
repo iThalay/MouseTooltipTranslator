@@ -1,3 +1,4 @@
+// import browser from "webextension-polyfill";
 var browser;
 try {
   browser = require("webextension-polyfill");

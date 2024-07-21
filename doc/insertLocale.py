@@ -17,7 +17,7 @@ translator = Translator()
 appName = "Mouse Tooltip Translator"
 appDesc = "Mouse Tooltip Translator translate mouseover text using google translate"
 
-localeList = ['ar', 'am', 'bg', 'bn', 'ca', 'cs', 'da', 'de', 'el', 'en', 'en_GB', 'en_US', 'es', 'es_419', 'et', 'fa', 'fi', 'fil', 'fr', 'gu', 'he', 'hi', 'hr', 'hu', 'id', 'it',
+localeList = ['ar', 'am', 'bg', 'bn', 'ca', 'cs', 'da', 'de', 'el', 'en', 'en_AU', 'en_GB', 'en_US', 'es', 'es_419', 'et', 'fa', 'fi', 'fil', 'fr', 'gu', 'he', 'hi', 'hr', 'hu', 'id', 'it',
               'ja', 'kn', 'ko', 'lt', 'lv', 'ml', 'mr', 'ms', 'nl', 'no', 'pl', 'pt_BR', 'pt_PT',  'ro', 'ru', 'sk', 'sl', 'sr', 'sv', 'sw', 'ta', 'te', 'th', 'tr', 'uk', 'vi', 'zh_CN', 'zh_TW']
 translateLangCodeDict = {"zh_CN": "zh-CN", "zh_TW": "zh-TW"}
 i18List = [
@@ -71,6 +71,24 @@ i18List = [
     "Tooltip Info Source Language",
     "Tooltip Info Transliteration",
     "Tooltip Interval Time",
+    "Tooltip Word Dictionary",
+
+    "SPEECH",
+    "Speech Recognition Language",
+    "Speech Recognition When",
+    "Voice Panel Translate Language",
+    "Voice Panel Text Target",
+    "Voice Panel Padding",
+    "Voice Panel Text Align",
+    "Voice Panel Source Font Size",
+    "Voice Panel Target Font Size",
+    "Voice Panel Source Font Color",
+    "Voice Panel Target Font Color",
+    "Voice Panel Source Border Color",
+    "Voice Panel Target Border Color",
+    "Voice Panel Background Color",
+
+
 
     "EXCLUDE                                      ",
     "EXCLUDE",
@@ -92,6 +110,8 @@ i18List = [
     "Check source code in github",
     "Privacy Policy",
     "User privacy policy",
+    "Voice Panel",
+    "Translate Voice",
 
     "Review                                      ",
     "Review this",

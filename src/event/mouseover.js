@@ -5,6 +5,7 @@
 // 4. range to text
 
 import * as util from "/src/util";
+import {debounce} from "lodash";
 
 var clientX = 0;
 var clientY = 0;
@@ -15,16 +16,15 @@ const PARENT_TAGS_TO_EXCLUDE = ["STYLE", "SCRIPT", "TITLE"];
 
 export function enableMouseoverTextEvent(
   _window = window,
-  textDetectTime = 0.7
+  textDetectTime = 0.1
 ) {
   _win = _window;
   textDetectTime = Number(textDetectTime) * 1000;
-
-  setInterval(async () => {
+  const triggerMouseoverTextWithDelay = debounce(async() => {
     triggerMouseoverText(await getMouseoverText(clientX, clientY));
   }, textDetectTime);
 
-  window.addEventListener("mousemove", (e) => {
+  window.addEventListener("mousemove", async (e) => {
     //if is ebook viewer event, take ebook window
     if (e.ebookWindow) {
       _win = e.ebookWindow;
@@ -38,6 +38,8 @@ export function enableMouseoverTextEvent(
     //else record mouse xy
     clientX = e.clientX;
     clientY = e.clientY;
+
+    triggerMouseoverTextWithDelay();
   });
 }
 
@@ -55,6 +57,7 @@ async function getMouseoverText(x, y) {
   var textElement;
   var range =
     caretRangeFromPoint(x, y, _win.document) ||
+    caretRangeFromPointOnPointedElement(x, y) ||
     caretRangeFromPointOnShadowDom(x, y);
 
   //get google doc select
@@ -65,6 +68,7 @@ async function getMouseoverText(x, y) {
   //get text from range
   var mouseoverText = await getTextFromRange(range);
   textElement?.remove();
+
   return mouseoverText;
 }
 async function getTextFromRange(range) {
@@ -82,7 +86,7 @@ async function getTextFromRange(range) {
 
       //check mouse xy overlap the range element
       if (checkXYInElement(rangeClone, clientX, clientY)) {
-        output[detectType] = rangeClone.toString();
+        output[detectType] = extractTextFromRange(rangeClone);
         output[detectType + "_range"] = rangeClone;
       }
     } catch (error) {
@@ -91,6 +95,11 @@ async function getTextFromRange(range) {
   }
 
   return output;
+}
+
+function extractTextFromRange(range) {
+  var rangeHtml = range.cloneContents();
+  return util.extractTextFromHtml(rangeHtml);
 }
 
 async function expandRange(range, type) {
@@ -104,7 +113,7 @@ async function expandRange(range, type) {
       // await expandRangeWithSeg(range, type);
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 
@@ -134,15 +143,28 @@ export function caretRangeFromPointOnDocument(x, y) {
   return getRangeFromTextNodes(x, y, textNodes);
 }
 
+export function caretRangeFromPointOnPointedElement(x, y) {
+  var pointedElements = document.elementsFromPoint(x, y);
+
+  pointedElements = pointedElements.filter(
+    (ele) => ele.offsetHeight < 1000 && ele.offsetWidth < 1000
+  );
+  if (pointedElements.length == 0) {
+    return;
+  }
+  var textNodes = textNodesUnder(pointedElements[pointedElements.length - 1]);
+
+  return getRangeFromTextNodes(x, y, textNodes);
+}
+
 export function caretRangeFromPointOnShadowDom(x, y) {
   // get all text from shadows
   var shadows = util.getAllShadows();
 
   //filter shadow dom by parent position overlap
-  shadows = shadows.filter((shadow) => checkXYInElement(shadow?.host, x, y));
-
   //get all text node
   var textNodes = shadows
+    .filter((shadow) => checkXYInElement(shadow?.host, x, y))
     .map((shadow) => Array.from(textNodesUnder(shadow)))
     .flat();
 
@@ -150,12 +172,12 @@ export function caretRangeFromPointOnShadowDom(x, y) {
 }
 
 function getRangeFromTextNodes(x, y, textNodes) {
-  // text node that position in x y
-  var textNodes = textNodes.filter((textNode) =>
-    checkXYInElement(getTextRange(textNode), x, y)
-  );
+  //filter no text
+  // filter no pos overlap
   // convert text node to char range
   var ranges = textNodes
+    .filter((textNode) => textNode.data.trim())
+    .filter((textNode) => checkXYInElement(getTextRange(textNode), x, y))
     .map((textNode) => Array.from(getCharRanges(textNode)))
     .flat();
   // get char range in x y
@@ -177,7 +199,7 @@ export function getAllTextNodes(el) {
 function textNodesUnder(el) {
   return walkNodeTree(el, NodeFilter.SHOW_TEXT, {
     inspect: (textNode) =>
-      !PARENT_TAGS_TO_EXCLUDE.includes(textNode.parentElement?.nodeName),
+      !PARENT_TAGS_TO_EXCLUDE.includes(textNode?.parentElement?.nodeName),
   });
 }
 

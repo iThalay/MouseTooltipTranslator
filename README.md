@@ -3,7 +3,7 @@
 [![Chrome users](https://img.shields.io/chrome-web-store/users/hmigninkgibhdckiaphhmbgcghochdjc?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/hmigninkgibhdckiaphhmbgcghochdjc)
 [![Chrome rate](https://img.shields.io/chrome-web-store/rating/hmigninkgibhdckiaphhmbgcghochdjc?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/hmigninkgibhdckiaphhmbgcghochdjc)
 
-Mouseover Translate Any Language At Once - Chrome Extension 
+Mouseover Translate Any Language At Once - Chrome Extension  
 
 Download from [chrome web store](https://chromewebstore.google.com/detail/hmigninkgibhdckiaphhmbgcghochdjc) and [Edge Extension store](https://microsoftedge.microsoft.com/addons/detail/mouse-tooltip-translator/nnodgmifnfgkolmakhcfkkbbjjcobhbl)
   
@@ -11,7 +11,7 @@ Download from [chrome web store](https://chromewebstore.google.com/detail/hmigni
 [<img alt="microsoft store" height="64px" src="doc/microsoft.png" />](https://microsoftedge.microsoft.com/addons/detail/mouse-tooltip-translator/nnodgmifnfgkolmakhcfkkbbjjcobhbl)
 [<img alt="softpedia" height="64px" src="doc/softpedia.png" />](https://www.softpedia.com/get/Internet/Internet-Applications-Addons/Chrome-Extensions/Mouse-Tooltip-Translator-for-Chrome.shtml)
 
-# Result
+# Result  
  
 ![Alt Text](doc/result_0.gif)
 ![result](doc/screenshot_3.png)
@@ -27,6 +27,8 @@ Download from [chrome web store](https://chromewebstore.google.com/detail/hmigni
 - Support pdf to display translated tooltip using PDF.js
 - Support dual subtitles for youtube video
 - Process OCR when hold left shift and mouse over on image (ex manga)
+- Translate with Speech recognition
+
 
 # How to use
 - [How to use](https://github.com/ttop32/MouseTooltipTranslator/blob/main/doc/intro.md#how-to-use)
@@ -151,6 +153,13 @@ npm run build        // or 'npm run watch' for developing
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/tofuthefirst">
+            <img src="https://avatars.githubusercontent.com/u/68274755?v=4" width="100;" alt="tofuthefirst"/>
+            <br />
+            <sub><b>Tofuthefirst</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/Blueberryy">
             <img src="https://avatars.githubusercontent.com/u/36592509?v=4" width="100;" alt="Blueberryy"/>
             <br />
@@ -163,15 +172,22 @@ npm run build        // or 'npm run watch' for developing
             <br />
             <sub><b>Hoang Van Nhat</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/newmind">
             <img src="https://avatars.githubusercontent.com/u/379460?v=4" width="100;" alt="newmind"/>
             <br />
             <sub><b>JG</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
+    <td align="center">
+        <a href="https://github.com/SFGFDSD">
+            <img src="https://avatars.githubusercontent.com/u/162313212?v=4" width="100;" alt="SFGFDSD"/>
+            <br />
+            <sub><b>Null</b></sub>
+        </a>
+    </td>
     <td align="center">
         <a href="https://github.com/di4m0nds">
             <img src="https://avatars.githubusercontent.com/u/84233833?v=4" width="100;" alt="di4m0nds"/>
@@ -200,8 +216,8 @@ npm run build        // or 'npm run watch' for developing
         <br />
         <sub><b>daniel k (ttop32)</b></sub></a>
       <br />
-      <sub><b>9384 words</b></sub>
-      <br /><sub><b><code title="Amharic">am</code></b>, <b><code title="Arabic">ar</code></b>, <b><code title="Bengali">bn</code></b>, <b><code title="Bulgarian">bg</code></b>, <b><code title="Catalan">ca</code></b>, <b><code title="Chinese Simplified">zh-CN</code></b>, <b><code title="Chinese Traditional">zh-TW</code></b>, <b><code title="Croatian">hr</code></b>, <b><code title="Czech">cs</code></b>, <b><code title="Danish">da</code></b>, <b><code title="Dutch">nl</code></b>, <b><code title="Estonian">et</code></b>, <b><code title="Filipino">fil</code></b>, <b><code title="Finnish">fi</code></b>, <b><code title="French">fr</code></b>, <b><code title="German">de</code></b>, <b><code title="Greek">el</code></b>, <b><code title="Gujarati">gu-IN</code></b>, <b><code title="Hebrew">he</code></b>, <b><code title="Hindi">hi</code></b>, <b><code title="Hungarian">hu</code></b>, <b><code title="Indonesian">id</code></b>, <b><code title="Italian">it</code></b>, <b><code title="Japanese">ja</code></b>, <b><code title="Kannada">kn</code></b>, <b><code title="Korean">ko</code></b>, <b><code title="Latvian">lv</code></b>, <b><code title="Lithuanian">lt</code></b>, <b><code title="Malay">ms</code></b>, <b><code title="Malayalam">ml-IN</code></b>, <b><code title="Marathi">mr</code></b>, <b><code title="Norwegian">no</code></b>, <b><code title="Persian">fa</code></b>, <b><code title="Polish">pl</code></b>, <b><code title="Portuguese">pt-PT</code></b>, <b><code title="Portuguese, Brazilian">pt-BR</code></b>, <b><code title="Romanian">ro</code></b>, <b><code title="Russian">ru</code></b>, <b><code title="Serbian (Cyrillic)">sr</code></b>, <b><code title="Slovak">sk</code></b>, <b><code title="Slovenian">sl</code></b>, <b><code title="Spanish">es-ES</code></b>, <b><code title="Spanish, Latin America">es-419</code></b>, <b><code title="Swahili">sw</code></b>, <b><code title="Swedish">sv-SE</code></b>, <b><code title="Tamil">ta</code></b>, <b><code title="Telugu">te</code></b>, <b><code title="Thai">th</code></b>, <b><code title="Turkish">tr</code></b>, <b><code title="Ukrainian">uk</code></b>, <b><code title="Vietnamese">vi</code></b></sub>
+      <sub><b>9936 words</b></sub>
+      <br /><sub><b><code title="Amharic">am</code></b>, <b><code title="Arabic">ar</code></b>, <b><code title="Bengali">bn</code></b>, <b><code title="Bulgarian">bg</code></b>, <b><code title="Catalan">ca</code></b>, <b><code title="Chinese Simplified">zh-CN</code></b>, <b><code title="Chinese Traditional">zh-TW</code></b>, <b><code title="Croatian">hr</code></b>, <b><code title="Czech">cs</code></b>, <b><code title="Danish">da</code></b>, <b><code title="Dutch">nl</code></b>, <b><code title="English, Australia">en-AU</code></b>, <b><code title="English, United Kingdom">en-GB</code></b>, <b><code title="English, United States">en-US</code></b>, <b><code title="Estonian">et</code></b>, <b><code title="Filipino">fil</code></b>, <b><code title="Finnish">fi</code></b>, <b><code title="French">fr</code></b>, <b><code title="German">de</code></b>, <b><code title="Greek">el</code></b>, <b><code title="Gujarati">gu-IN</code></b>, <b><code title="Hebrew">he</code></b>, <b><code title="Hindi">hi</code></b>, <b><code title="Hungarian">hu</code></b>, <b><code title="Indonesian">id</code></b>, <b><code title="Italian">it</code></b>, <b><code title="Japanese">ja</code></b>, <b><code title="Kannada">kn</code></b>, <b><code title="Korean">ko</code></b>, <b><code title="Latvian">lv</code></b>, <b><code title="Lithuanian">lt</code></b>, <b><code title="Malay">ms</code></b>, <b><code title="Malayalam">ml-IN</code></b>, <b><code title="Marathi">mr</code></b>, <b><code title="Norwegian">no</code></b>, <b><code title="Persian">fa</code></b>, <b><code title="Polish">pl</code></b>, <b><code title="Portuguese">pt-PT</code></b>, <b><code title="Portuguese, Brazilian">pt-BR</code></b>, <b><code title="Romanian">ro</code></b>, <b><code title="Russian">ru</code></b>, <b><code title="Serbian (Cyrillic)">sr</code></b>, <b><code title="Slovak">sk</code></b>, <b><code title="Slovenian">sl</code></b>, <b><code title="Spanish">es-ES</code></b>, <b><code title="Spanish, Latin America">es-419</code></b>, <b><code title="Swahili">sw</code></b>, <b><code title="Swedish">sv-SE</code></b>, <b><code title="Tamil">ta</code></b>, <b><code title="Telugu">te</code></b>, <b><code title="Thai">th</code></b>, <b><code title="Turkish">tr</code></b>, <b><code title="Ukrainian">uk</code></b>, <b><code title="Vietnamese">vi</code></b></sub>
     </td>
     <td align="center" valign="top">
       <a href="https://crowdin.com/profile/nejdetacar"><img alt="logo" style="width: 100px" src="https://crowdin-static.downloads.crowdin.com/avatar/12677379/medium/a652b6c7e95226407d84e96ea1a2e86f.jpg" />
@@ -210,6 +226,14 @@ npm run build        // or 'npm run watch' for developing
       <br />
       <sub><b>63 words</b></sub>
       <br /><sub><b><code title="Turkish">tr</code></b></sub>
+    </td>
+    <td align="center" valign="top">
+      <a href="https://crowdin.com/profile/CreeperYeeter2"><img alt="logo" style="width: 100px" src="https://crowdin-static.downloads.crowdin.com/avatar/16245208/medium/8a0163ae0953c336a9a02f1562f292c5_default.png" />
+        <br />
+        <sub><b>CreeperYeeter2</b></sub></a>
+      <br />
+      <sub><b>13 words</b></sub>
+      <br /><sub><b><code title="English, Australia">en-AU</code></b></sub>
     </td>
   </tr>
 </table><a href="https://crowdin.com/project/mousetooltiptranslator" target="_blank">Translate in Crowdin 🚀</a>
@@ -248,6 +272,8 @@ npm run build        // or 'npm run watch' for developing
 - [doq](https://github.com/shivaprsd/doq)
 - [foliate-js](https://github.com/johnfactotum/foliate-js)
 - [google-translate-api](https://github.com/vitalets/google-translate-api)
+- [crx-live-translate](https://github.com/botbahlul/crx-live-translate/tree/main)
+- [voice-driven-web-apps-introduction](https://developer.chrome.com/blog/voice-driven-web-apps-introduction-to-the-web-speech-api)
 - [review by MagmaChipmunk](https://twitter.com/MagmaChipmunk/status/1348144312605806594)
 - [review by doitreview](https://doitreview.tistory.com/68?category=915950)
 - [review by parbat0305](https://parbat0305.tistory.com/527)
