@@ -5,7 +5,7 @@
 // 4. range to text
 
 import * as util from "/src/util";
-import {debounce} from "lodash";
+import { debounce } from "lodash";
 
 var clientX = 0;
 var clientY = 0;
@@ -16,31 +16,42 @@ const PARENT_TAGS_TO_EXCLUDE = ["STYLE", "SCRIPT", "TITLE"];
 
 export function enableMouseoverTextEvent(
   _window = window,
-  textDetectTime = 0.1
+  textDetectTime = 0.7
 ) {
   _win = _window;
   textDetectTime = Number(textDetectTime) * 1000;
-  const triggerMouseoverTextWithDelay = debounce(async() => {
+  const triggerMouseoverTextWithDelay = debounce(async () => {
     triggerMouseoverText(await getMouseoverText(clientX, clientY));
   }, textDetectTime);
 
   window.addEventListener("mousemove", async (e) => {
-    //if is ebook viewer event, take ebook window
-    if (e.ebookWindow) {
-      _win = e.ebookWindow;
-      _isIframe = true;
-      clientX = e.iframeX;
-      clientY = e.iframeY;
-    }
-    if (_isIframe == true) {
-      return;
-    }
-    //else record mouse xy
-    clientX = e.clientX;
-    clientY = e.clientY;
-
+    updateMouseoverXY(e);
     triggerMouseoverTextWithDelay();
   });
+  window.addEventListener("scroll", (e) => {
+    triggerMouseoverTextWithDelay();
+  });
+}
+
+function updateMouseoverXY(e) {
+  updateEbookWindowPos(e);
+  updateWindowPos(e);
+}
+
+function updateEbookWindowPos(e) {
+  if (e.ebookWindow) {
+    _win = e.ebookWindow;
+    _isIframe = true;
+    clientX = e.iframeX;
+    clientY = e.iframeY;
+  }
+}
+function updateWindowPos(e) {
+  if (_isIframe) {
+    return;
+  }
+  clientX = e.clientX;
+  clientY = e.clientY;
 }
 
 export const triggerMouseoverText = (mouseoverText) => {
