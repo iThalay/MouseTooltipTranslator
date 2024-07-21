@@ -1,108 +1,225 @@
 {
-	"appName": {
-		"message": "마우스 툴팁 번역기"
+	"MAIN______________________________________": {
+		"message": "MAIN                                      "
 	},
-	"appDesc": {
-		"message": "마우스 툴팁 번역기 Google 번역을 사용하여 마우스 오버 텍스트를 번역합니다"
-	},
-	"Main______________________________________": {
-		"message": "Main                                      "
+	"MAIN": {
+		"message": "MAIN"
 	},
 	"Mouse_Tooltip_Translator": {
-		"message": "Mouse Tooltip Translator"
+		"message": "마우스 툴팁 번역기"
 	},
 	"Show_Tooltip_When": {
-		"message": "Show Tooltip When"
+		"message": "툴팁은 언제"
 	},
-	"TTS_When": {
-		"message": "TTS When"
+	"Voice_When": {
+		"message": "TTS 는 언제"
 	},
 	"Translate_When": {
-		"message": "Translate When"
+		"message": "번역은 언제"
 	},
 	"Translate_From": {
-		"message": "Translate From"
+		"message": "번역은 어느 언어에서"
 	},
 	"Translate_Into": {
-		"message": "Translate Into"
+		"message": "어떤 언어로 번역을"
 	},
-	"Translator": {
-		"message": "Translator"
+	"Translator_Engine": {
+		"message": "번역 엔진"
 	},
-	"Text_Detect_Type": {
-		"message": "Text Detect Type"
-	},
-	"Detect_Type_Swap_Hold_Key": {
-		"message": "Detect Type Swap Hold Key"
-	},
-	"Translate_Writing_Hotkey": {
-		"message": "Translate Writing Hotkey"
+	"Mouseover_Text_Type": {
+		"message": "마우스오버 텍스트 타입"
 	},
 	"Writing_Language": {
-		"message": "Writing Language"
+		"message": "쓰기 언어"
+	},
+	"OCR_Language": {
+		"message": "OCR 언어"
 	},
 	"Reverse_Translate_Language": {
 		"message": "Reverse Translate Language"
 	},
-	"Detect_PDF": {
-		"message": "Detect PDF"
+	"GRAPHIC______________________________________": {
+		"message": "GRAPHIC                                      "
 	},
-	"Detect_Youtube": {
-		"message": "Detect Youtube"
-	},
-	"OCR_When": {
-		"message": "OCR_When"
-	},
-	"OCR_Detection_Language": {
-		"message": "OCR Detection Language"
-	},
-	"Exclude_Language": {
-		"message": "Exclude Language"
-	},
-	"Exclude_Website": {
-		"message": "Exclude Website"
-	},
-	"Visual______________________________________": {
-		"message": "Visual                                      "
+	"GRAPHIC": {
+		"message": "GRAPHIC"
 	},
 	"Tooltip_Font_Size": {
-		"message": "Tooltip Font Size"
+		"message": "툴팁 폰트 크기"
 	},
 	"Tooltip_Width": {
-		"message": "Tooltip Width"
+		"message": "툴팁 너비"
 	},
 	"Tooltip_Distance": {
-		"message": "Tooltip Distance"
+		"message": "툴팁 거리"
+	},
+	"Tooltip_Animation": {
+		"message": "툴팁 애니메이션"
 	},
 	"Tooltip_Position": {
-		"message": "Tooltip Position"
+		"message": "툴팁 위치"
 	},
 	"Tooltip_Text_Align": {
-		"message": "Tooltip Text Align"
+		"message": "툴팁 텍스트 정렬"
 	},
 	"Tooltip_Background_Blur": {
-		"message": "Tooltip Background Blur"
+		"message": "툴팁 배경 Blur"
+	},
+	"Mouseover_Highlight_Text": {
+		"message": "Mouseover Highlight Text"
 	},
 	"Tooltip_Font_Color": {
-		"message": "Tooltip Font Color"
+		"message": "툴팁 폰트 색상"
 	},
 	"Tooltip_Background_Color": {
-		"message": "Tooltip Background Color"
+		"message": "툴팁 배경 색상"
 	},
-	"Voice______________________________________": {
-		"message": "Voice                                      "
+	"Tooltip_Border_Color": {
+		"message": "툴팁 테두리 색상"
 	},
-	"TTS_Speed": {
-		"message": "TTS Speed"
+	"Mouseover_Text_Highlight_Color": {
+		"message": "마우스오버 텍스트 하이라이트 색상"
 	},
-	"TTS_Volume": {
-		"message": "TTS Volume"
+	"VOICE______________________________________": {
+		"message": "VOICE                                      "
+	},
+	"VOICE": {
+		"message": "VOICE"
+	},
+	"Voice_Volume": {
+		"message": "Voice 볼륨"
+	},
+	"Voice_Speed": {
+		"message": "Voice 속도"
+	},
+	"Voice_Target": {
+		"message": "Voice Target"
+	},
+	"Voice_Repeat": {
+		"message": "Voice 반복"
 	},
 	"Voice_for_": {
 		"message": "Voice for "
 	},
+	"ADVANCED______________________________________": {
+		"message": "ADVANCED                                      "
+	},
+	"ADVANCED": {
+		"message": "ADVANCED"
+	},
+	"Translate_Writing_When": {
+		"message": "Translate Writing When"
+	},
+	"OCR_When": {
+		"message": "OCR When"
+	},
+	"Detect_Subtitle": {
+		"message": "Detect Subtitle"
+	},
+	"Detect_PDF": {
+		"message": "Detect PDF"
+	},
+	"Mouseover_Pause_Subtitle": {
+		"message": "Mouseover Pause Subtitle"
+	},
+	"Mouseover_Text_Type_Swap_Key": {
+		"message": "Mouseover Text Type Swap Key"
+	},
+	"Tooltip_Info_Source_Text": {
+		"message": "Tooltip Info Source Text"
+	},
+	"Tooltip_Info_Source_Language": {
+		"message": "Tooltip Info Source Language"
+	},
+	"Tooltip_Info_Transliteration": {
+		"message": "Tooltip Info Transliteration"
+	},
+	"Tooltip_Interval_Time": {
+		"message": "Tooltip Interval Time"
+	},
+	"Tooltip_Word_Dictionary": {
+		"message": "Tooltip Word Dictionary"
+	},
+	"SPEECH": {
+		"message": "SPEECH"
+	},
+	"Speech_Recognition_Language": {
+		"message": "Speech Recognition Language"
+	},
+	"Speech_Recognition_When": {
+		"message": "Speech Recognition When"
+	},
+	"Voice_Panel_Translate_Language": {
+		"message": "Voice Panel Translate Language"
+	},
+	"Voice_Panel_Text_Target": {
+		"message": "Voice Panel Text Target"
+	},
+	"Voice_Panel_Padding": {
+		"message": "Voice Panel Padding"
+	},
+	"Voice_Panel_Text_Align": {
+		"message": "Voice Panel Text Align"
+	},
+	"Voice_Panel_Source_Font_Size": {
+		"message": "Voice Panel Source Font Size"
+	},
+	"Voice_Panel_Target_Font_Size": {
+		"message": "Voice Panel Target Font Size"
+	},
+	"Voice_Panel_Source_Font_Color": {
+		"message": "Voice Panel Source Font Color"
+	},
+	"Voice_Panel_Target_Font_Color": {
+		"message": "Voice Panel Target Font Color"
+	},
+	"Voice_Panel_Source_Border_Color": {
+		"message": "Voice Panel Source Border Color"
+	},
+	"Voice_Panel_Target_Border_Color": {
+		"message": "Voice Panel Target Border Color"
+	},
+	"Voice_Panel_Background_Color": {
+		"message": "Voice Panel Background Color"
+	},
+	"EXCLUDE______________________________________": {
+		"message": "EXCLUDE                                      "
+	},
+	"EXCLUDE": {
+		"message": "EXCLUDE"
+	},
+	"Exclude_Language": {
+		"message": "제외할 언어"
+	},
+	"Exclude_Website": {
+		"message": "Exclude Website"
+	},
 	"About______________________________________": {
 		"message": "About                                      "
+	},
+	"How_to_use": {
+		"message": "How to use"
+	},
+	"Check_how_to_use_this_extension": {
+		"message": "이 확장 프로그램 사용 방법 확인"
+	},
+	"PDF_Viewer": {
+		"message": "PDF 뷰어"
+	},
+	"Translate_local_PDF_file": {
+		"message": "로컬 PDF 파일 번역"
+	},
+	"Ebook_Reader": {
+		"message": "Ebook 리더"
+	},
+	"Translate_local_ebook_file": {
+		"message": "로컬 ebook 파일 번역"
+	},
+	"Twitter": {
+		"message": "Twitter"
+	},
+	"Retweet_twitter_post": {
+		"message": "Retweet twitter post"
 	},
 	"Review_Page": {
 		"message": "Review Page"
@@ -122,10 +239,28 @@
 	"User_privacy_policy": {
 		"message": "User privacy policy"
 	},
-	"PDF_Viewer": {
-		"message": "PDF Viewer"
+	"Voice_Panel": {
+		"message": "Voice Panel"
 	},
-	"Translate_local_PDF_file": {
-		"message": "Translate local PDF file"
+	"Translate_Voice": {
+		"message": "Translate Voice"
+	},
+	"Review______________________________________": {
+		"message": "Review                                      "
+	},
+	"Review_this": {
+		"message": "Review this"
+	},
+	"Developer_love_criticism": {
+		"message": "Developer love criticism"
+	},
+	"Title______________________________________": {
+		"message": "Title                                      "
+	},
+	"appName": {
+		"message": "마우스 툴팁 번역기"
+	},
+	"appDesc": {
+		"message": "마우스 툴팁 번역기 Google 번역을 사용하여 마우스 오버 텍스트를 번역합니다. Support OCR, TTS, manga translator & pdf translator."
 	}
 }

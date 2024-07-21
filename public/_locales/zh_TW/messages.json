@@ -1,12 +1,9 @@
 {
-	"appName": {
-		"message": "鼠標工具提示翻譯器"
+	"MAIN______________________________________": {
+		"message": "MAIN                                      "
 	},
-	"appDesc": {
-		"message": "鼠標工具提示轉換器使用Google Translate翻譯鼠標文本"
-	},
-	"Main______________________________________": {
-		"message": "Main                                      "
+	"MAIN": {
+		"message": "MAIN"
 	},
 	"Mouse_Tooltip_Translator": {
 		"message": "Mouse Tooltip Translator"
@@ -14,8 +11,8 @@
 	"Show_Tooltip_When": {
 		"message": "Show Tooltip When"
 	},
-	"TTS_When": {
-		"message": "TTS When"
+	"Voice_When": {
+		"message": "Voice When"
 	},
 	"Translate_When": {
 		"message": "Translate When"
@@ -26,44 +23,26 @@
 	"Translate_Into": {
 		"message": "Translate Into"
 	},
-	"Translator": {
-		"message": "Translator"
+	"Translator_Engine": {
+		"message": "Translator Engine"
 	},
-	"Text_Detect_Type": {
-		"message": "Text Detect Type"
-	},
-	"Detect_Type_Swap_Hold_Key": {
-		"message": "Detect Type Swap Hold Key"
-	},
-	"Translate_Writing_Hotkey": {
-		"message": "Translate Writing Hotkey"
+	"Mouseover_Text_Type": {
+		"message": "Mouseover Text Type"
 	},
 	"Writing_Language": {
 		"message": "Writing Language"
 	},
+	"OCR_Language": {
+		"message": "OCR Language"
+	},
 	"Reverse_Translate_Language": {
 		"message": "Reverse Translate Language"
 	},
-	"Detect_PDF": {
-		"message": "Detect PDF"
+	"GRAPHIC______________________________________": {
+		"message": "GRAPHIC                                      "
 	},
-	"Detect_Youtube": {
-		"message": "Detect Youtube"
-	},
-	"OCR_When": {
-		"message": "OCR_When"
-	},
-	"OCR_Detection_Language": {
-		"message": "OCR Detection Language"
-	},
-	"Exclude_Language": {
-		"message": "Exclude Language"
-	},
-	"Exclude_Website": {
-		"message": "Exclude Website"
-	},
-	"Visual______________________________________": {
-		"message": "Visual                                      "
+	"GRAPHIC": {
+		"message": "GRAPHIC"
 	},
 	"Tooltip_Font_Size": {
 		"message": "Tooltip Font Size"
@@ -74,6 +53,9 @@
 	"Tooltip_Distance": {
 		"message": "Tooltip Distance"
 	},
+	"Tooltip_Animation": {
+		"message": "Tooltip Animation"
+	},
 	"Tooltip_Position": {
 		"message": "Tooltip Position"
 	},
@@ -83,26 +65,161 @@
 	"Tooltip_Background_Blur": {
 		"message": "Tooltip Background Blur"
 	},
+	"Mouseover_Highlight_Text": {
+		"message": "Mouseover Highlight Text"
+	},
 	"Tooltip_Font_Color": {
 		"message": "Tooltip Font Color"
 	},
 	"Tooltip_Background_Color": {
 		"message": "Tooltip Background Color"
 	},
-	"Voice______________________________________": {
-		"message": "Voice                                      "
+	"Tooltip_Border_Color": {
+		"message": "Tooltip Border Color"
 	},
-	"TTS_Speed": {
-		"message": "TTS Speed"
+	"Mouseover_Text_Highlight_Color": {
+		"message": "Mouseover Text Highlight Color"
 	},
-	"TTS_Volume": {
-		"message": "TTS Volume"
+	"VOICE______________________________________": {
+		"message": "VOICE                                      "
+	},
+	"VOICE": {
+		"message": "VOICE"
+	},
+	"Voice_Volume": {
+		"message": "Voice Volume"
+	},
+	"Voice_Speed": {
+		"message": "Voice Speed"
+	},
+	"Voice_Target": {
+		"message": "Voice Target"
+	},
+	"Voice_Repeat": {
+		"message": "Voice Repeat"
 	},
 	"Voice_for_": {
 		"message": "Voice for "
 	},
+	"ADVANCED______________________________________": {
+		"message": "ADVANCED                                      "
+	},
+	"ADVANCED": {
+		"message": "ADVANCED"
+	},
+	"Translate_Writing_When": {
+		"message": "Translate Writing When"
+	},
+	"OCR_When": {
+		"message": "OCR When"
+	},
+	"Detect_Subtitle": {
+		"message": "Detect Subtitle"
+	},
+	"Detect_PDF": {
+		"message": "Detect PDF"
+	},
+	"Mouseover_Pause_Subtitle": {
+		"message": "Mouseover Pause Subtitle"
+	},
+	"Mouseover_Text_Type_Swap_Key": {
+		"message": "Mouseover Text Type Swap Key"
+	},
+	"Tooltip_Info_Source_Text": {
+		"message": "Tooltip Info Source Text"
+	},
+	"Tooltip_Info_Source_Language": {
+		"message": "Tooltip Info Source Language"
+	},
+	"Tooltip_Info_Transliteration": {
+		"message": "Tooltip Info Transliteration"
+	},
+	"Tooltip_Interval_Time": {
+		"message": "Tooltip Interval Time"
+	},
+	"Tooltip_Word_Dictionary": {
+		"message": "Tooltip Word Dictionary"
+	},
+	"SPEECH": {
+		"message": "SPEECH"
+	},
+	"Speech_Recognition_Language": {
+		"message": "Speech Recognition Language"
+	},
+	"Speech_Recognition_When": {
+		"message": "Speech Recognition When"
+	},
+	"Voice_Panel_Translate_Language": {
+		"message": "Voice Panel Translate Language"
+	},
+	"Voice_Panel_Text_Target": {
+		"message": "Voice Panel Text Target"
+	},
+	"Voice_Panel_Padding": {
+		"message": "Voice Panel Padding"
+	},
+	"Voice_Panel_Text_Align": {
+		"message": "Voice Panel Text Align"
+	},
+	"Voice_Panel_Source_Font_Size": {
+		"message": "Voice Panel Source Font Size"
+	},
+	"Voice_Panel_Target_Font_Size": {
+		"message": "Voice Panel Target Font Size"
+	},
+	"Voice_Panel_Source_Font_Color": {
+		"message": "Voice Panel Source Font Color"
+	},
+	"Voice_Panel_Target_Font_Color": {
+		"message": "Voice Panel Target Font Color"
+	},
+	"Voice_Panel_Source_Border_Color": {
+		"message": "Voice Panel Source Border Color"
+	},
+	"Voice_Panel_Target_Border_Color": {
+		"message": "Voice Panel Target Border Color"
+	},
+	"Voice_Panel_Background_Color": {
+		"message": "Voice Panel Background Color"
+	},
+	"EXCLUDE______________________________________": {
+		"message": "EXCLUDE                                      "
+	},
+	"EXCLUDE": {
+		"message": "EXCLUDE"
+	},
+	"Exclude_Language": {
+		"message": "Exclude Language"
+	},
+	"Exclude_Website": {
+		"message": "Exclude Website"
+	},
 	"About______________________________________": {
 		"message": "About                                      "
+	},
+	"How_to_use": {
+		"message": "How to use"
+	},
+	"Check_how_to_use_this_extension": {
+		"message": "Check how to use this extension"
+	},
+	"PDF_Viewer": {
+		"message": "PDF Viewer"
+	},
+	"Translate_local_PDF_file": {
+		"message": "Translate local PDF file"
+	},
+	"Ebook_Reader": {
+		"message": "Ebook Reader"
+	},
+	"Translate_local_ebook_file": {
+		"message": "Translate local ebook file"
+	},
+	"Twitter": {
+		"message": "Twitter"
+	},
+	"Retweet_twitter_post": {
+		"message": "Retweet twitter post"
 	},
 	"Review_Page": {
 		"message": "Review Page"
@@ -122,10 +239,28 @@
 	"User_privacy_policy": {
 		"message": "User privacy policy"
 	},
-	"PDF_Viewer": {
-		"message": "PDF Viewer"
+	"Voice_Panel": {
+		"message": "Voice Panel"
 	},
-	"Translate_local_PDF_file": {
-		"message": "Translate local PDF file"
+	"Translate_Voice": {
+		"message": "Translate Voice"
+	},
+	"Review______________________________________": {
+		"message": "Review                                      "
+	},
+	"Review_this": {
+		"message": "Review this"
+	},
+	"Developer_love_criticism": {
+		"message": "Developer love criticism"
+	},
+	"Title______________________________________": {
+		"message": "Title                                      "
+	},
+	"appName": {
+		"message": "鼠標工具提示翻譯器"
+	},
+	"appDesc": {
+		"message": "鼠標工具提示轉換器使用Google Translate翻譯鼠標文本. Support OCR, TTS, manga translator & pdf translator."
 	}
 }

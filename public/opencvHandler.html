@@ -1,27 +1,24 @@
 <!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mouse Tooltip Translator OpenCV</title>
+  </head>
+  <body>
+    <script>
+      var Module = {
+        wasmBinaryFile: "/opencv/opencv_js.wasm",
+        // _main: function() {opencvIsReady();}
+      };
 
-  
-  <script>
-    var Module = {
-      wasmBinaryFile: '/opencv/opencv_js.wasm',
-      // _main: function() {opencvIsReady();}
-    };
-        
-    function opencvIsReady() {
-      console.log('OpenCV.js (WebAssembly) is ready.') 
-      let mat = cv.matFromArray(2, 3, cv.CV_8UC1, [1, 2, 3, 4, 5, 6]);
-      console.log('cols =', mat.cols, '; rows =', mat.rows);
-      console.log(mat.data8S);
-    }
-  </script>
-  <script async src="/opencv/opencv.js"></script> 
-
-
-  <script type="text/javascript" src="/opencvHandler.js"></script>
-
-</body>
+      function opencvIsReady() {
+        console.log("OpenCV.js (WebAssembly) is ready.");
+        let mat = cv.matFromArray(2, 3, cv.CV_8UC1, [1, 2, 3, 4, 5, 6]);
+        console.log("cols =", mat.cols, "; rows =", mat.rows);
+        console.log(mat.data8S);
+      }
+    </script>
+    <script type="module" src="opencvHandler.js"></script>
+    <script async src="/opencv/opencv.js"></script>
+  </body>
 </html>

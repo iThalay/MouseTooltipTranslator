@@ -1,8 +1,8 @@
-import BaseTranslator from "./BaseTranslator";
-
 // https://github.com/PinMIlk/nodepapago
+import BaseTranslator from "./baseTranslator";
+import ky from "ky";
 import { v4 as uuidv4 } from "uuid";
-import Crypto from "crypto";
+import CryptoJS from "crypto-js";
 
 var papagoLangCode = {
   ar: "ar",
@@ -24,7 +24,6 @@ var papagoLangCode = {
   "zh-CN": "zh-CN",
   "zh-TW": "zh-TW",
 };
-
 // var urlTranslate="https://papago.naver.com/apis/nsmt/translate"
 var urlTranslate = "https://papago.naver.com/apis/n2mt/translate";
 var urlDect = "https://papago.naver.com/apis/langs/dect";
@@ -34,51 +33,50 @@ export default class papago extends BaseTranslator {
   static langCodeJson = papagoLangCode;
   static version = "";
 
-  static async requestTranslate(text, fromLang, targetLang) {
-    if (fromLang == "auto") {
-      var { options, uuid } = await this.getOptionsAndUuid(urlDect);
-      var { langCode } = await this.fetchJson(
-        urlDect,
-        {
-          query: text,
-        },
-        options
-      );
-      fromLang = langCode;
+  static async requestTranslate(text, sourceLang, targetLang) {
+    if (sourceLang == "auto") {
+      var { headers, uuid } = await this.getOptionsAndUuid(urlDect);
+      var { langCode } = await ky
+        .post(urlDect, {
+          searchParams: { query: text },
+          headers,
+        })
+        .json();
+      sourceLang = langCode;
     }
 
-    var { options, uuid } = await this.getOptionsAndUuid(urlTranslate);
-
-    return await this.fetchJson(
-      urlTranslate,
-      {
-        deviceId: uuid,
-        locale: "ko",
-        dict: "true",
-        dictDisplay: "30",
-        honorific: "false",
-        instant: "false",
-        paging: "false",
-        source: fromLang,
-        target: targetLang,
-        text: text,
-      },
-      options
-    );
+    var { headers, uuid } = await this.getOptionsAndUuid(urlTranslate);
+    return await ky
+      .post(urlTranslate, {
+        searchParams: {
+          deviceId: uuid,
+          locale: "ko",
+          dict: "true",
+          dictDisplay: "30",
+          honorific: "false",
+          instant: "false",
+          paging: "false",
+          source: sourceLang,
+          target: targetLang,
+          text: text,
+        },
+        headers,
+      })
+      .json();
   }
 
-  static wrapResponse(res, fromLang, targetLang) {
+  static async wrapResponse(res, text, sourceLang, targetLang) {
     return {
-      translatedText: res["translatedText"],
+      targetText: res["translatedText"],
       detectedLang: res["srcLangType"],
       transliteration: "",
     };
   }
 
   static async getVersion() {
-    var data = await this.fetchText(mainUrl);
+    var data = await ky(mainUrl).text();
     var scriptUrl = mainUrl + "main." + data.match(/"\/main.([^"]+)"/)[1];
-    var data = await this.fetchText(scriptUrl);
+    var data = await ky(scriptUrl).text();
     var version = "v1." + data.match(/"v1.([^"]+)"/)[1];
     return version;
   }
@@ -86,9 +84,10 @@ export default class papago extends BaseTranslator {
     var uuid = uuidv4();
     var time = Date.now();
     this.version = this.version ? this.version : await this.getVersion();
-    var hash = Crypto.createHmac("md5", this.version)
-      .update(`${uuid}\n${url}\n${time}`)
-      .digest("base64");
+    const key = CryptoJS.enc.Utf8.parse(this.version);
+    const plain = CryptoJS.enc.Utf8.parse(`${uuid}\n${url}\n${time}`);
+    var hash = CryptoJS.enc.Base64.stringify(CryptoJS.HmacMD5(plain, key));
+
     return {
       uuid,
       time,
@@ -97,11 +96,14 @@ export default class papago extends BaseTranslator {
   }
   static async getOptionsAndUuid(url) {
     var { uuid, time, hash } = await this.getToken(url);
-    var headers = {
-      Authorization: `PPG ${uuid}:${hash}`,
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      Timestamp: time,
+
+    return {
+      headers: {
+        Authorization: `PPG ${uuid}:${hash}`,
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        Timestamp: time,
+      },
+      uuid,
     };
-    return { options: { method: "POST", headers }, uuid };
   }
 }
