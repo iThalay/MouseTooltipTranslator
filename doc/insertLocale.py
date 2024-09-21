@@ -117,6 +117,11 @@ i18List = [
     "Review this",
     "Developer love criticism",
 
+    "Coffee                                      ",
+    "Buy coffee",
+    "Cheer on my efforts",
+
+
 
     "Title                                      ",
 
@@ -173,6 +178,9 @@ def addBasicDescription(jsonDict, locale):
     if "appDesc" not in jsonDict:
         jsonDict["appDesc"] = {"message": translate(appDesc, locale)}
 
+    if "appDesc" in jsonDict:
+        jsonDict["appDesc"] = {"message": jsonDict["appDesc"]["message"][:130]}
+
 
 def getI18IdList():
     return [getI18Id(i18) for i18 in i18List]
@@ -181,7 +189,7 @@ def getI18IdList():
 def addI18Description(jsonDict,):
     idList = getI18IdList()
     for (i18, i18Id) in zip(i18List, idList):
-        if i18Id not in jsonDict:
+        if i18Id not in jsonDict or not jsonDict[i18Id]["message"]:
             jsonDict[i18Id] = {"message": i18}
 
 

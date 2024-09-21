@@ -254,6 +254,15 @@
 	"Developer_love_criticism": {
 		"message": "Developer love criticism"
 	},
+	"Coffee______________________________________": {
+		"message": "Coffee                                      "
+	},
+	"Buy_coffee": {
+		"message": "Buy dev coffee"
+	},
+	"Cheer_on_my_efforts": {
+		"message": "Cheer on dev efforts"
+	},
 	"Title______________________________________": {
 		"message": "Title                                      "
 	},
@@ -261,6 +270,6 @@
 		"message": "MTT Translate ChatGPT"
 	},
 	"appDesc": {
-		"message": "Traducător de instrumente de mouse -ul traduce textul mouseover folosind Google Translate. Support OCR, TTS, manga translator & pdf translator."
+		"message": "Traducător de instrumente de mouse -ul traduce textul mouseover folosind Google Translate. Support OCR, TTS, manga translator & pd"
 	}
 }
