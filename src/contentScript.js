@@ -3,382 +3,508 @@
 //intercept pdf url
 
 import $ from "jquery";
-import "bootstrap/js/dist/tooltip";
-import { enableSelectionEndEvent, getSelectionText } from "./selection";
-import { encode } from "he";
+import tippy, { sticky, hideAll } from "tippy.js";
 import matchUrl from "match-url-wildcard";
-import * as util from "./util.js";
-import * as ocrView from "./ocr/ocrView.js";
+import delay from "delay";
+import browser from "webextension-polyfill";
+
+import {
+  enableSelectionEndEvent,
+  getSelectionText,
+} from "/src/event/selection";
+import { enableMouseoverTextEvent } from "/src/event/mouseover";
+import * as util from "/src/util";
+import * as dom_util from "/src/util/dom";
+
+import * as ocrView from "/src/ocr/ocrView.js";
+import subtitle from "/src/subtitle/subtitle.js";
+import { langListOpposite } from "/src/util/lang.js";
 
 //init environment var======================================================================\
 var setting;
+var tooltip;
+var style;
+var styleSubtitle;
 var tooltipContainer;
+var tooltipContainerEle;
+
 var clientX = 0;
 var clientY = 0;
 var mouseTarget = null;
-var activatedWord = null;
 var mouseMoved = false;
 var mouseMovedCount = 0;
-var keyDownList = {}; //use key down for enable translation partially
-var style;
-let selectedText = "";
+var keyDownList = { always: true }; //use key down for enable translation partially
+var mouseKeyMap = ["ClickLeft", "ClickMiddle", "ClickRight"];
+
 var destructionEvent = "destructmyextension_MouseTooltipTranslator"; // + chrome.runtime.id;
 const controller = new AbortController();
 const { signal } = controller;
-var mouseoverInterval;
-var mouseoverIntervalTime = 700;
-var rtlLangList = [
-  "ar", //Arabic
-  "iw", //Hebrew
-  "ku", //Kurdish
-  "fa", //Persian
-  "ur", //Urdu
-  "yi", //Yiddish
-]; //right to left language system list
-var writingField =
-  'input[type="text"], input[type="search"], input:not([type]), textarea, [contenteditable="true"], [role=textbox]';
-var isYoutubeDetected = false;
+var isBlobPdfOpened = false;
+
+var selectedText = "";
+var prevSelected = "";
+var hoveredData = {};
+var stagedText = null;
+var prevTooltipText = "";
+
+var tooltipRemoveTimeoutId = "";
+var tooltipRemoveTime = 3000;
+
+var listenText = "";
 
 //tooltip core======================================================================
-$(async function initMouseTooltipTranslator() {
-  loadDestructor(); //remove previous tooltip script
-  await getSetting(); //load setting
-  if (checkExcludeUrl()) {
-    return;
+
+(async function initMouseTooltipTranslator() {
+  try {
+    injectGoogleDocAnnotation(); //check google doc and add annotation env var
+    loadDestructor(); //remove previous tooltip script
+    await getSetting(); //load setting
+    if (checkExcludeUrl()) {
+      return;
+    }
+    await waitJquery(); //wait jquery load
+    detectPDF(); //check current page is pdf
+    checkVideo(); // check  video  site for subtitle
+    checkGoogleDocs(); // check google doc
+    addElementEnv(); //add tooltip container
+    applyStyleSetting(); //add tooltip style
+    addBackgroundListener(); // get background listener for copy request
+    loadEventListener(); //load event listener to detect mouse move
+    loadSpeechRecognition();
+    startMouseoverDetector(); // start current mouseover text detector
+    startTextSelectDetector(); // start current text select detector
+  } catch (error) {
+    console.log(error);
   }
-  detectPDF(); //check current page is pdf
-  checkYoutube();
-  addElementEnv(); //add tooltip container
-  applyStyleSetting(); //add tooltip style
-  loadEventListener(); //load event listener to detect mouse move
-  startMouseoverDetector(); // start current mouseover text detector
-  startTextSelectDetector(); // start current text select detector
-});
+})();
 
 //determineTooltipShowHide based on hover, check mouse over word on every 700ms
 function startMouseoverDetector() {
-  mouseoverInterval = setInterval(async function() {
-    // only work when tab is activated and when mousemove and no selected text
-    if (
-      mouseMoved &&
-      !selectedText &&
-      document.visibilityState == "visible" &&
-      setting["translateWhen"].includes("mouseover")
-    ) {
-      let word = getMouseOverWord(clientX, clientY);
-      await processWord(word, "mouseover");
-    }
-  }, mouseoverIntervalTime);
+  enableMouseoverTextEvent(window, setting["tooltipEventInterval"]);
+  addEventHandler("mouseoverText", stageTooltipTextHover);
 }
 
 //determineTooltipShowHide based on selection
 function startTextSelectDetector() {
-  enableSelectionEndEvent(); //set mouse drag text selection event
-  addEventHandler("selectionEnd", async function(event) {
-    // if translate on selection is enabled
-    if (
-      document.visibilityState == "visible" &&
-      setting["translateWhen"].includes("select")
-    ) {
-      selectedText = event.selectedText;
-      await processWord(selectedText, "select");
-    }
-  });
+  enableSelectionEndEvent(window, setting["tooltipEventInterval"]); //set mouse drag text selection event
+  addEventHandler("selectionEnd", stageTooltipTextSelect);
+}
+
+function stageTooltipTextHover(event, useEvent = true) {
+  hoveredData = useEvent ? event?.mouseoverText : hoveredData;
+  // if mouseover detect setting is on and
+  // if no selected text
+  if (
+    setting["translateWhen"].includes("mouseover") &&
+    !selectedText &&
+    !listenText &&
+    hoveredData
+  ) {
+    var mouseoverType = getMouseoverType();
+    var mouseoverText = hoveredData[mouseoverType];
+    var mouseoverRange = hoveredData[mouseoverType + "_range"];
+    stageTooltipText(mouseoverText, "mouseover", mouseoverRange);
+  }
+}
+
+function stageTooltipTextSelect(event, useEvent = true) {
+  // if translate on selection is enabled
+  if (setting["translateWhen"].includes("select") && !listenText) {
+    prevSelected = selectedText;
+    selectedText = useEvent ? event?.selectedText : selectedText;
+    stageTooltipText(selectedText, "select");
+  }
 }
 
 //process detected word
-async function processWord(word, actionType, isCtrlPressed = false) {
-  // skip if mouse target is tooltip
-  if (checkMouseTargetIsTooltip()) {
+async function stageTooltipText(text, actionType, range) {
+  text = util.filterWord(text); //filter out one that is url,no normal char
+  var isTtsOn =
+    keyDownList[setting["TTSWhen"]] ||
+    (setting["TTSWhen"] == "select" && actionType == "select");
+
+  var isTooltipOn = keyDownList[setting["showTooltipWhen"]];
+  var timestamp = Number(Date.now());
+  // skip if mouse target is tooltip or no text, if no new word or  tab is not activated
+  // hide tooltip, if  no text
+  // if tooltip is off, hide tooltip
+  if (
+    !checkWindowFocus() ||
+    checkMouseTargetIsTooltip() ||
+    stagedText == text ||
+    !util.isExtensionOnline() ||
+    (selectedText == prevSelected && !text && actionType == "select") //prevent select flicker
+  ) {
     return;
-  }
-
-  word = util.filterWord(word); //filter out one that is url,over 1000length,no normal char
-
-  //hide tooltip, if activated word exist and current word is none
-  //do nothing, if no new word or no word change
-  if (!word && activatedWord) {
-    activatedWord = word;
+  } else if (!text) {
+    stagedText = text;
     hideTooltip();
     return;
-  } else if (activatedWord == word || !word) {
+  } else if (!isTooltipOn && !isTtsOn) {
+    hideTooltip();
     return;
+  } else if (!isTooltipOn) {
+    hideTooltip();
   }
 
-  // language tutor mode
-  var isLanguageTutorMode = setting["languageTutor"];
-  
   //stage current processing word
-  activatedWord = word;
-  var result = null;
-  if (isCtrlPressed && word?.trim()?.split(' ')?.length === 1) {
-    result = await fetchPronunciation(word.trim());
-  } else {
-    result = isLanguageTutorMode == "true" ? await translateWithOpenAI(word) : await translateWithReverse(word);
-  }
-  var {
-    translatedText, 
-    sourceLang, 
-    targetLang, 
-    transliteration
-  } = result;
+  stagedText = text;
+  var translatedData = await util.requestTranslate(
+    text,
+    setting["translateSource"],
+    setting["translateTarget"],
+    setting["translateReverseTarget"]
+  );
+  var { targetText, sourceLang, targetLang } = translatedData;
 
-  //if translated text is empty, hide tooltip
   // if translation is not recent one, do not update
-  if (
-    !translatedText ||
-    // sourceLang == targetLang ||
-    word == translatedText ||
+  //if translated text is empty, hide tooltip
+  if (stagedText != text) {
+    return;
+  } else if (
+    !targetText ||
+    sourceLang == targetLang ||
     setting["langExcludeList"].includes(sourceLang)
   ) {
     hideTooltip();
     return;
-  } else if (activatedWord != word) {
-    return;
   }
 
   //if tooltip is on or activation key is pressed, show tooltip
-  //if current word is recent activatedWord
-  if (
-    setting["showTooltipWhen"] == "always" ||
-    keyDownList[setting["showTooltipWhen"]]
-  ) {
-    var tooltipText = concatTransliteration(translatedText, transliteration);
-    showTooltip(tooltipText, targetLang);
-    requestHistoryUpdate(word, translatedText, actionType);
+  if (isTooltipOn) {
+    handleTooltip(text, translatedData, actionType, range);
   }
-
   //if use_tts is on or activation key is pressed, do tts
-  if (setting["TTSWhen"] == "always" || keyDownList[setting["TTSWhen"]] || isCtrlPressed) {
-    requestTTS(word, sourceLang);
+  if (isTtsOn) {
+    util.requestTTS(text, sourceLang, targetText, targetLang, timestamp);
   }
 }
 
-function getMouseOverWord(x, y) {
-  //if no range, skip
-  var range =
-    util.caretRangeFromPoint(x, y) || util.caretRangeFromPointOnShadowDom(x, y);
-  if (!range) {
-    return "";
-  }
-
-  //expand char to get word,sentence based on setting
+function getMouseoverType() {
   //if swap key pressed, swap detect type
   //if mouse target is special web block, handle as block
-  var detectType = setting["detectType"];
-  detectType = keyDownList[setting["keyDownDetectSwap"]]
+  var detectType = setting["mouseoverTextType"];
+  detectType = keyDownList[setting["keyDownMouseoverTextSwap"]]
     ? detectType == "word"
       ? "sentence"
       : "word"
     : detectType;
+
   detectType = checkMouseTargetIsSpecialWebBlock() ? "container" : detectType;
-  expandRange(range, detectType);
-
-  if (!util.checkXYInElement(range, x, y)) {
-    return "";
-  }
-  return range.toString();
-}
-
-function expandRange(range, type) {
-  try {
-    if (type == "container") {
-      range.setStartBefore(range.startContainer);
-      range.setEndAfter(range.startContainer);
-      range.setStart(range.startContainer, 0);
-    } else {
-      range.expand(type); // "word" or "sentence"
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  return detectType;
 }
 
 function checkMouseTargetIsSpecialWebBlock() {
-  var specialClassNameList = [
-    "ocr_text_div", //mousetooltip ocr block
-  ];
   // if mouse targeted web element contain particular class name, return true
-  return specialClassNameList.some((className) =>
-    mouseTarget.classList.contains(className)
+  //mousetooltip ocr block
+  var classList = mouseTarget?.classList;
+  return ["ocr_text_div", "textFitted"].some((className) =>
+    classList?.contains(className)
   );
 }
 
 function checkMouseTargetIsTooltip() {
-  if (tooltipContainer.has(mouseTarget).length) {
-    return true;
+  try {
+    return $(tooltip?.popper)?.get(0)?.contains(mouseTarget);
+  } catch (error) {
+    return false;
   }
-  return false;
 }
 
-function showTooltip(text, lang) {
-  hideTooltip(); //reset tooltip arrow
+//tooltip show hide logic=========================================================
+function showTooltip(text) {
+  if (prevTooltipText != text) {
+    hideTooltip(true);
+  }
+  prevTooltipText = text;
+  cancelRemoveTooltipContainer();
+  checkTooltipContainerInit();
+  tooltip?.setContent(text);
+  tooltip?.show();
+}
+
+function hideTooltip(resetAll = false) {
+  if (resetAll) {
+    hideAll({ duration: 0 }); //hide all tippy
+  }
+  tooltip?.hide();
+  hideHighlight();
+  removeTooltipContainer();
+}
+
+function removeTooltipContainer() {
+  cancelRemoveTooltipContainer();
+  tooltipRemoveTimeoutId = setTimeout(() => {
+    $("#mttContainer").remove();
+  }, tooltipRemoveTime);
+}
+
+function cancelRemoveTooltipContainer() {
+  clearTimeout(tooltipRemoveTimeoutId);
+}
+
+function checkTooltipContainerInit() {
   checkTooltipContainer();
-  setTooltipPosition("showTooltip");
-  applyLangAlignment(lang);
-  tooltipContainer.attr("data-original-title", text); //place text on tooltip
-  tooltipContainer.tooltip("show");
+  checkStyleContainer();
 }
-
-function hideTooltip() {
-  tooltipContainer.tooltip("hide");
-}
-
-function applyLangAlignment(lang) {
-  var isRtl = rtlLangList.includes(lang) ? "rtl" : "ltr";
-  tooltipContainer.attr("dir", isRtl);
-}
-
 function checkTooltipContainer() {
-  //restart container if not exist
-  if (!tooltipContainer.parent().is("body")) {
+  if (!$("#mttContainer").get(0)) {
     tooltipContainer.appendTo(document.body);
+  }
+}
+
+function checkStyleContainer() {
+  if (!$("#mttstyle").get(0)) {
     style.appendTo("head");
   }
 }
 
-function setTooltipPosition(calledFrom = "") {
-  if (calledFrom == "showTooltip" && setting["tooltipPosition"] == "follow") {
-    return;
-  } else if (
-    calledFrom == "mousemove" &&
-    setting["tooltipPosition"] == "fixed"
-  ) {
-    return;
-  }
-
-  tooltipContainer.css(
-    "transform",
-    "translate(" + clientX + "px," + clientY + "px)"
-  );
+function hideHighlight() {
+  $(".mtt-highlight")?.remove();
 }
 
-async function translateWithReverse(word) {
-  var response = await requestTranslate(
-    word,
-    setting["translateSource"],
-    setting["translateTarget"]
-  );
-  // console.log(response);
+function handleTooltip(text, translatedData, actionType, range) {
+  var { targetText, sourceLang, targetLang, transliteration, dict, imageUrl } =
+    translatedData;
+  var isShowOriTextOn = setting["tooltipInfoSourceText"] == "true";
+  var isShowLangOn = setting["tooltipInfoSourceLanguage"] == "true";
+  var isTransliterationOn = setting["tooltipInfoTransliteration"] == "true";
+  var tooltipTransliteration = isTransliterationOn ? transliteration : "";
+  var tooltipLang = isShowLangOn ? langListOpposite[sourceLang] : "";
+  var tooltipOriText = isShowOriTextOn ? text : "";
+  var isDictOn = setting["tooltipWordDictionary"] == "true";
+  var dictData = isDictOn ? wrapDict(dict, targetLang) : "";
 
-  //if to,from lang are same and reverse translate on
-  if (
-    setting["translateTarget"] == response.sourceLang &&
-    setting["translateReverseTarget"] != "null"
-  ) {
-    response = await requestTranslate(
-      word,
-      response.sourceLang,
-      setting["translateReverseTarget"]
+  var tooltipMainText =
+    wrapMainImage(imageUrl) || dictData || wrapMain(targetText, targetLang);
+  var tooltipSubText =
+    wrapInfoText(tooltipOriText, "i", sourceLang) +
+    wrapInfoText(tooltipTransliteration, "b") +
+    wrapInfoText(tooltipLang, "sup");
+  var tooltipText = tooltipMainText + tooltipSubText;
+
+  showTooltip(tooltipText);
+
+  util.requestRecordTooltipText(
+    text,
+    sourceLang,
+    targetText,
+    targetLang,
+    dict,
+    actionType
+  );
+  highlightText(range);
+}
+
+function wrapMain(targetText, targetLang) {
+  if (!targetText) {
+    return "";
+  }
+  return $("<span/>", {
+    dir: util.getRtlDir(targetLang),
+    text: targetText,
+  }).prop("outerHTML");
+}
+
+function wrapDict(dict, targetLang) {
+  if (!dict) {
+    return "";
+  }
+  var htmlText = wrapMain(dict, targetLang);
+  // wrap first text as bold
+  dict
+    .split("\n")
+    .map((line) => line.split(":")[0])
+    .map(
+      (text) =>
+        (htmlText = htmlText.replace(
+          text,
+          $("<b/>", {
+            text,
+          }).prop("outerHTML")
+        ))
     );
+  return htmlText;
+}
+
+function wrapInfoText(text, type, dirLang = null) {
+  if (!text) {
+    return "";
+  }
+  return $(`<${type}/>`, {
+    dir: util.getRtlDir(dirLang),
+    text: "\n" + text,
+  }).prop("outerHTML");
+}
+
+function wrapMainImage(imageUrl) {
+  if (!imageUrl) {
+    return "";
+  }
+  return $("<img/>", {
+    src: imageUrl,
+    class: "mtt-image",
+  }).prop("outerHTML");
+}
+
+function highlightText(range) {
+  if (!range || setting["mouseoverHighlightText"] == "false") {
+    return;
+  }
+  hideHighlight();
+  var rects = range.getClientRects();
+  rects = util.filterOverlappedRect(rects);
+  var adjustX = window.scrollX;
+  var adjustY = window.scrollY;
+  if (util.isEbookReader()) {
+    var ebookViewerRect = util.getEbookIframe()?.getBoundingClientRect();
+    adjustX += ebookViewerRect?.left;
+    adjustY += ebookViewerRect?.top;
   }
 
-  return response;
-}
-
-async function translateWithOpenAI(word) {
-  var response = await requestLanguageTutor(
-    word,
-    setting["translateSource"],
-    setting["translateTarget"]
-  );
-
-  return response;
-}
-
-async function fetchPronunciation(word) {
-  var response = await requestPronunciation(
-    word,
-    setting["translateSource"]
-  );
-
-  return response;
-}
-
-function concatTransliteration(translatedText, transliteration) {
-  // if no transliteration or setting is off, skip
-  if (!transliteration || setting["useTransliteration"] == "false") {
-    return encode(translatedText);
+  for (var rect of rects) {
+    $("<div/>", {
+      class: "mtt-highlight",
+      css: {
+        position: "absolute",
+        left: rect.left + adjustX,
+        top: rect.top + adjustY,
+        width: rect.width,
+        height: rect.height,
+      },
+    }).appendTo("body");
   }
-  return `${encode(translatedText)}<br><br> <h5>${encode(
-    transliteration
-  )}</h5>`;
 }
 
 //Translate Writing feature==========================================================================================
-async function translateWriting(keyInput) {
-  //check current focus is write box
+async function translateWriting() {
+  //check current focus is write box and hot key pressed
+  // if is google doc do not check writing box
   if (
-    setting["keyDownTranslateWriting"] != keyInput ||
-    !getFocusedWritingBox()
+    !keyDownList[setting["keyDownTranslateWriting"]] ||
+    (!dom_util.getFocusedWritingBox() && !util.isGoogleDoc())
   ) {
     return;
   }
-
   // get writing text
-  var writingText = getWritingText();
+  var writingText = await getWritingText();
   if (!writingText) {
     return;
   }
-
   // translate
-  var { translatedText } = await requestTranslate(
+  var { targetText, isBroken } = await util.requestTranslate(
     writingText,
     "auto",
-    setting["writingLanguage"]
+    setting["writingLanguage"],
+    setting["translateTarget"]
   );
-
-  insertText(translatedText);
-}
-
-function insertText(inputText) {
-  if (!inputText) {
+  //skip no translation or is too late to respond
+  if (isBroken) {
     return;
   }
-  // document.execCommand("delete", false, null);
-  document.execCommand("insertHTML", false, inputText);
-  // document.execCommand("insertText", false, inputText);
+  insertText(targetText);
 }
 
-function getFocusedWritingBox() {
-  var writingBox = $(":focus");
-  return writingBox.is(writingField) ? writingBox : null;
-}
-
-function getWritingText() {
-  // get current selected text, if no select, get all
-  if (window.getSelection().type == "Caret") {
-    document.execCommand("selectAll", false, null);
+async function getWritingText() {
+  // get current selected text,
+  if (hasSelection() && getSelectionText()?.length>1) {
+    return getSelectionText();
   }
-
-  //get html
-  var writingText = "";
-  var sel = window.getSelection();
-  var html = "";
-  if (sel.rangeCount) {
-    var container = document.createElement("div");
-    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-      container.appendChild(sel.getRangeAt(i).cloneContents());
-    }
-    html = container.innerHTML;
-  }
-
-  // if no html format text , get as string
-  writingText = html.toString() ? html : window.getSelection().toString();
-  return writingText;
+  // if no select, select all to get all
+  document.execCommand("selectAll", false, null);
+  var text = getSelectionText();
+  await makeNonEnglishTypingFinish();
+  return text;
 }
 
-//event Listener - detect mouse move, key press, mouse press, tab switch==========================================================================================
+function hasSelection() {
+  return window.getSelection().type != "Caret";
+}
+
+async function makeNonEnglishTypingFinish() {
+  // IME fix
+  //refocus input text to prevent prev remain typing
+  await delay(10);
+  var ele = util.getActiveElement();
+  window.getSelection().removeAllRanges();
+  ele?.blur();
+  await delay(10);
+  ele?.focus();
+  await delay(50);
+  document.execCommand("selectAll", false, null);
+  await delay(50);
+}
+
+async function insertText(text) {
+  var writingBox = dom_util.getFocusedWritingBox();
+  if (!text) {
+    return;
+  } else if (util.isGoogleDoc()) {
+    pasteTextGoogleDoc(text);
+  } else if ($(writingBox).is("[spellcheck='true']")) {
+    //for discord twitch
+    await pasteTextInputBox(text);
+    await pasteTextExecCommand(text);
+  } else {
+    //for bard , butterflies.ai
+    await pasteTextExecCommand(text);
+    await pasteTextInputBox(text);
+  } 
+}
+
+async function pasteTextExecCommand(text){
+  if (!hasSelection()) {
+    return;
+  }
+  document.execCommand("insertText", false, text);
+  await delay(300);
+}
+
+async function pasteTextInputBox(text) {
+  if (!hasSelection()) {
+    return;
+  }
+  var ele = util.getActiveElement();
+  pasteText(ele, text);
+  await delay(300);
+}
+
+function pasteTextGoogleDoc(text) {
+  // https://github.com/matthewsot/docs-plus
+  var el = document.getElementsByClassName("docs-texteventtarget-iframe")?.[0];
+  el = el.contentDocument.querySelector("[contenteditable=true]");
+  pasteText(el, text);
+}
+function pasteText(ele, text) {
+  var clipboardData = new DataTransfer();
+  clipboardData.setData("text/plain", text);
+  var paste = new ClipboardEvent("paste", {
+    clipboardData,
+    data: text,
+    dataType: "text/plain",
+    bubbles: true,
+    cancelable: true,
+  });
+  paste.docs_plus_ = true;
+  ele.dispatchEvent(paste);
+  clipboardData.clearData();
+}
+
+// Listener - detect mouse move, key press, mouse press, tab switch==========================================================================================
 function loadEventListener() {
   //use mouse position for tooltip position
   addEventHandler("mousemove", handleMousemove);
+  addEventHandler("touchstart", handleTouchstart);
+
   //detect activation hold key pressed
   addEventHandler("keydown", handleKeydown);
   addEventHandler("keyup", handleKeyup);
+  addEventHandler("mousedown", handleMouseKeyDown);
+  addEventHandler("mouseup", handleMouseKeyUp);
+  addEventHandler("mouseup", disableEdgeMiniMenu, false);
+
   //detect tab switching to reset env
-  addEventHandler("blur", handleBlur);
-  // when refresh web site, stop tts
-  addEventHandler("beforeunload", reuqestStopTTS);
+  addEventHandler("blur", resetTooltipStatus);
 }
 
 function handleMousemove(e) {
@@ -388,61 +514,94 @@ function handleMousemove(e) {
     return;
   }
   setMouseStatus(e);
-  ocrView.checkImage(setting, mouseTarget, keyDownList);
-  checkWritingBox();
-  setTooltipPosition("mousemove");
-  checkMouseTargetIsYoutubeSubtitle();
+  setTooltipPosition(e.clientX, e.clientY);
+  ocrView.checkImage(mouseTarget, setting, keyDownList);
+}
+
+function handleTouchstart(e) {
+  mouseMoved = true;
 }
 
 function handleKeydown(e) {
   //if user pressed ctrl+f  ctrl+a, hide tooltip
-  if ((e.code == "KeyF" || e.code == "KeyA") && e.ctrlKey) {
+  if (/KeyA|KeyF/.test(e.code) && e.ctrlKey) {
     mouseMoved = false;
     hideTooltip();
+  } else if (e.code == "Escape") {
+    util.requestStopTTS();
+  } else if (e.key == "HangulMode" || e.key == "Process") {
     return;
-  }
-
-  // check already pressed or key is not setting key
-  if (
-    keyDownList[e.code] ||
-    ![
-      setting["showTooltipWhen"],
-      setting["TTSWhen"],
-      setting["keyDownDetectSwap"],
-      setting["keyDownTranslateWriting"],
-      setting["keyDownOCR"],
-    ].includes(e.code)
-  ) {
-    return;
-  }
-
-  //reset status to restart process with keybind
-  keyDownList[e.code] = true;
-  activatedWord = null; //restart word process
-  if (selectedText != "") {
-    processWord(selectedText, "select", true); //restart select if selected value exist
-  }
-  if (e.key == "Alt") {
+  } else if (e.key == "Alt") {
     e.preventDefault(); // prevent alt site unfocus
   }
-  translateWriting(e.code);
+
+  holdKeydownList(e.code);
 }
 
 function handleKeyup(e) {
-  if (keyDownList.hasOwnProperty(e.code)) {
-    keyDownList[e.code] = false;
+  releaseKeydownList(e.code);
+  stopSpeechRecognitionByKey(e.code);
+}
+
+function handleMouseKeyDown(e) {
+  holdKeydownList(mouseKeyMap[e.button]);
+}
+function handleMouseKeyUp(e) {
+  releaseKeydownList(mouseKeyMap[e.button]);
+}
+
+function holdKeydownList(key) {
+  if (key && !keyDownList[key] && !util.isCharKey(key)) {
+    keyDownList[key] = true;
+
+    restartWordProcess();
+    translateWriting();
+    startSpeechRecognitionByKey(key);
+  }
+  stopTTSbyCombKey(key);
+}
+
+function disableEdgeMiniMenu(e) {
+  //prevent mouse tooltip overlap with edge mini menu
+  if (util.isEdge() && mouseKeyMap[e.button] == "ClickLeft") {
+    e.preventDefault();
   }
 }
 
-function handleBlur(e) {
-  keyDownList = {}; //reset key press
+async function stopTTSbyCombKey(key) {
+  // stop tts if char key like crtl +c
+  if (util.isCharKey(key)) {
+    util.requestStopTTS(Date.now() + 500);
+  }
+}
+
+async function releaseKeydownList(key) {
+  await delay(20);
+  keyDownList[key] = false;
+}
+
+function resetTooltipStatus() {
+  keyDownList = { always: true }; //reset key press
   mouseMoved = false;
   mouseMovedCount = 0;
   selectedText = "";
-  activatedWord = null;
+  stagedText = null;
   hideTooltip();
-  reuqestStopTTS();
   ocrView.removeAllOcrEnv();
+  listenText = "";
+  util.stopSpeechRecognition();
+}
+
+async function restartWordProcess() {
+  //rerun staged text
+  await delay(10); //wait for select changed by click
+  var selectedText = getSelectionText();
+  stagedText = null;
+  if (selectedText) {
+    stageTooltipTextSelect("", false);
+  } else {
+    stageTooltipTextHover("", false);
+  }
 }
 
 function setMouseStatus(e) {
@@ -450,19 +609,8 @@ function setMouseStatus(e) {
   clientY = e.clientY;
   mouseTarget = e.target;
 }
-
-function checkWritingBox() {
-  var $writingField = $(writingField);
-  if (!$writingField.is(mouseTarget) || !$writingField.data("mttBound")) {
-    return;
-  }
-
-  $writingField
-    .data("mttBound", true)
-    .off("keydown")
-    .on("keydown", handleKeydown)
-    .off("keyup")
-    .on("keyup", handleKeyup);
+function setTooltipPosition(x, y) {
+  tooltipContainer?.css("transform", `translate(${x}px,${y}px)`);
 }
 
 function checkMouseOnceMoved(x, y) {
@@ -478,232 +626,279 @@ function checkMouseOnceMoved(x, y) {
   return mouseMoved;
 }
 
-//send to background.js for background processing  ===========================================================================
-
-async function sendMesage(message) {
-  try {
-    return await chrome.runtime.sendMessage(message);
-  } catch (e) {
-    if (e.message != "Extension context invalidated.") {
-      console.log(e);
-    }
-  }
-  return {};
+function checkWindowFocus() {
+  return mouseMoved && document.visibilityState == "visible";
 }
 
-async function requestTranslate(word, translateSource, translateTarget) {
-  return await sendMesage({
-    type: "translate",
-    word: word,
-    translateSource,
-    translateTarget,
+function addBackgroundListener() {
+  //handle copy
+  util.addMessageListener("CopyRequest", (message) => {
+    util.copyTextToClipboard(message.text);
   });
 }
 
-async function requestLanguageTutor(word, translateSource, translateTarget) {
-  return await sendMesage({
-    type: "languageTutor",
-    word: word,
-    translateSource,
-    translateTarget,
+function waitJquery() {
+  return new Promise(async (resolve, reject) => {
+    $(() => {
+      resolve();
+    });
   });
 }
 
-async function requestPronunciation(word, translateSource) {
-  return await sendMesage({
-    type: "pronunciation",
-    word: word,
-    translateSource
-  });
+function checkExcludeUrl() {
+  var url = util.getCurrentUrl();
+  return matchUrl(url, setting["websiteExcludeList"]);
 }
 
-async function requestTTS(word, lang) {
-  return await sendMesage({
-    type: "tts",
-    word: word,
-    lang: lang,
-  });
-}
-
-async function reuqestStopTTS() {
-  return await sendMesage({
-    type: "stopTTS",
-  });
-}
-
-//send history to background.js
-async function requestHistoryUpdate(sourceText, targetText, actionType) {
-  return await sendMesage({
-    type: "historyUpdate",
-    sourceText,
-    targetText,
-    actionType,
-  });
-}
-
-// setting handling===============================================================
+// setting handling & container style===============================================================
 
 async function getSetting() {
   setting = await util.loadSetting(function settingCallbackFn() {
+    resetTooltipStatus();
     applyStyleSetting();
-    selectedText = "";
-    ocrView.removeAllOcrEnv();
+    checkVideo();
+    initSpeechRecognitionLang();
+  });
+}
+
+async function addElementEnv() {
+  tooltipContainer = $("<div/>", {
+    id: "mttContainer",
+    class: "notranslate",
+  });
+  tooltipContainerEle = tooltipContainer.get(0);
+
+  style = $("<style/>", {
+    id: "mttstyle",
+  }).appendTo("head");
+  styleSubtitle = $("<style/>", {
+    id: "mttstyleSubtitle",
+  }).appendTo("head");
+
+  tooltip = tippy(tooltipContainerEle, {
+    content: "",
+    trigger: "manual",
+    allowHTML: true,
+    theme: "custom",
+    zIndex: 100000200,
+    hideOnClick: false,
+    role: "mtttooltip",
+    interactive: true,
+    plugins: [sticky],
   });
 }
 
 function applyStyleSetting() {
-  style.html(
-    `
+  var isSticky = setting["tooltipPosition"] == "follow";
+  tooltip.setProps({
+    offset: [0, setting["tooltipDistance"]],
+    sticky: isSticky ? "reference" : "popper",
+    appendTo: isSticky ? tooltipContainerEle : document.body,
+    animation: setting["tooltipAnimation"],
+  });
+
+  style.html(`
     #mttContainer {
       left: 0 !important;
       top: 0 !important;
       width: 1000px !important;
+      margin: 0px !important;
       margin-left: -500px !important;
-      height: ${setting["tooltipDistance"] * 2}px  !important;
-      margin-top: ${-setting["tooltipDistance"]}px  !important;
       position: fixed !important;
       z-index: 100000200 !important;
       background: none !important;
       pointer-events: none !important;
       display: inline-block !important;
-    }
-    .bootstrapiso .tooltip {
-      width:auto  !important;
-      height:auto  !important;
-      background: none !important;
-      border:none !important;
-      border-radius: 0px !important;
       visibility: visible  !important;
-      pointer-events: none !important;
+      white-space: pre-line;
     }
-    .bootstrapiso .tooltip-inner {
+    .tippy-box[data-theme~="custom"], .tippy-content *{
       font-size: ${setting["tooltipFontSize"]}px  !important;
-      max-width: ${setting["tooltipWidth"]}px  !important;
       text-align: ${setting["tooltipTextAlign"]} !important;
-      backdrop-filter: blur(${setting["tooltipBackgroundBlur"]}px) !important; 
-      background-color: ${setting["tooltipBackgroundColor"]} !important;
+      overflow-wrap: break-word !important;
       color: ${setting["tooltipFontColor"]} !important;
-      pointer-events: auto;
+      font-family: 
+        -apple-system, BlinkMacSystemFont,
+        "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", "Fira Sans",
+        "Droid Sans", "Helvetica Neue", sans-serif  !important;
+      white-space: pre-line;
     }
-    .bootstrapiso .arrow::before {
+    .tippy-box[data-theme~="custom"]{
+      max-width: ${setting["tooltipWidth"]}px  !important;
+      backdrop-filter: blur(${setting["tooltipBackgroundBlur"]}px) !important;
+      background-color: ${setting["tooltipBackgroundColor"]} !important;
+      border: 1px solid ${setting["tooltipBorderColor"]}; 
+    }
+    [data-tippy-root] {
+      display: inline-block !important;
+      visibility: visible  !important;
+      position: absolute !important;
+    }
+    .tippy-box[data-theme~='custom'][data-placement^='top'] > .tippy-arrow::before { 
       border-top-color: ${setting["tooltipBackgroundColor"]} !important;
     }
-    .bootstrapiso .arrow::after {
-      display:none !important;
+    .tippy-box[data-theme~='custom'][data-placement^='bottom'] > .tippy-arrow::before {
+      border-bottom-color: ${setting["tooltipBackgroundColor"]} !important;
+    }
+    .tippy-box[data-theme~='custom'][data-placement^='left'] > .tippy-arrow::before {
+      border-left-color: ${setting["tooltipBackgroundColor"]} !important;
+    }
+    .tippy-box[data-theme~='custom'][data-placement^='right'] > .tippy-arrow::before {
+      border-right-color: ${setting["tooltipBackgroundColor"]} !important;
+    }
+    .mtt-highlight{
+      background-color: ${setting["mouseoverTextHighlightColor"]}  !important;
+      position: absolute !important;   
+      z-index: 100000100 !important;
+      pointer-events: none !important;
+      display: inline !important;
+      border-radius: 3px !important;
+    }
+    .mtt-image{
+      width: ${Number(setting["tooltipWidth"]) - 20}px  !important;
+      border-radius: 3px !important;
     }
     .ocr_text_div{
       position: absolute;
-      opacity: 0.7;
-      font-size: calc(100% + 1cqw);
-      overflow: hidden;
-      border: 2px solid CornflowerBlue;
+      opacity: 0.5;
       color: transparent !important;
+      border: 2px solid CornflowerBlue;
       background: none !important;
+      border-radius: 3px !important;
+    }`);
+  styleSubtitle
+    .html(
+      `
+    #ytp-caption-window-container .ytp-caption-segment {
+      cursor: text !important;
+      user-select: text !important;
+      font-family: 
+      -apple-system, BlinkMacSystemFont,
+      "Segoe UI", "Roboto", "Oxygen",
+      "Ubuntu", "Cantarell", "Fira Sans",
+      "Droid Sans", "Helvetica Neue", sans-serif  !important;
     }
-
-    ` +
-      (isYoutubeDetected
-        ? `
-      #ytp-caption-window-container .ytp-caption-segment {
-        cursor: text !important;
-        user-select: text !important;
-      }
-      .caption-visual-line{
-        display: flex  !important;
-        align-items: stretch  !important;
-      }
-      .captions-text .caption-visual-line:first-of-type:after {
-        font-size: 1.5em;
-        content: '⣿⣿';
-        background-color: #000000b8;
-        display: inline-block;
-        vertical-align: top;
-        opacity:0;
-        transition: opacity 0.7s ease-in-out;
-      }
-      .captions-text:hover .caption-visual-line:first-of-type:after {
-        opacity:1;
-      }
-    `
-        : "")
-  );
+    .caption-visual-line{
+      display: flex  !important;
+      align-items: stretch  !important;
+    }
+    .captions-text .caption-visual-line:first-of-type:after {
+      content: '⣿⣿';
+      background-color: #000000b8;
+      display: inline-block;
+      vertical-align: top;
+      opacity:0;
+      transition: opacity 0.7s ease-in-out;
+    }
+    .captions-text:hover .caption-visual-line:first-of-type:after {
+      opacity:1;
+    }
+    .ytp-pause-overlay {
+      display: none !important;
+    }
+    .ytp-expand-pause-overlay .caption-window {
+      display: block !important;
+    }
+  `
+    )
+    .prop("disabled", setting["detectSubtitle"] == "null");
 }
 
 // url check and element env===============================================================
-function detectPDF() {
-  if (setting["detectPDF"] == "true") {
-    if (
-      document.body.children[0] &&
-      document.body.children[0].type == "application/pdf"
-    ) {
-      window.location.replace(
-        chrome.runtime.getURL("/pdfjs/web/viewer.html") +
-          "?file=" +
-          encodeURIComponent(window.location.href)
-      );
-    }
+async function detectPDF() {
+  if (
+    setting["detectPDF"] == "true" &&
+    document?.body?.children?.[0]?.type == "application/pdf"
+  ) {
+    addPdfListener();
+    openPdfIframe(window.location.href);
+    // var url = "file:///D:/dummy.pd";
+    // openPdfIframe(url);
+    // redirectToPDFViewer();
   }
 }
 
-function checkExcludeUrl() {
-  // iframe parent url check
-  var url =
-    window.location != window.parent.location
-      ? document.referrer
-      : document.location.href;
-  return matchUrl(url, setting["websiteExcludeList"]);
+function redirectToPDFViewer() {
+  window.location.replace(
+    util.getUrlExt(
+      `/pdfjs/web/viewer.html?file=${encodeURIComponent(window.location.href)}`
+    )
+  );
+}
+function addPdfListener() {
+  //if pdf not working message come, try open using blob url
+  util.addFrameListener("pdfErrorLoadDocument", openPdfIframeBlob);
 }
 
-function addElementEnv() {
-  tooltipContainer = $("<div/>", {
-    id: "mttContainer",
-    class: "bootstrapiso notranslate", //use bootstrapiso class to apply bootstrap isolation css, prevent google web translate
-    "data-html": "true",
-  }).appendTo(document.body);
+async function openPdfIframeBlob() {
+  if (isBlobPdfOpened) {
+    return;
+  }
+  // wrap url for bypass referrer check, sciencedirect
+  isBlobPdfOpened = true;
+  var url = window.location.href;
+  var blob = await fetch(url).then((r) => r.blob());
+  var url = URL.createObjectURL(blob);
+  openPdfIframe(url);
+}
 
-  tooltipContainer.tooltip({
-    placement: "top",
-    container: "#mttContainer",
-    trigger: "manual",
-    boundary: "document",
+function openPdfIframe(url) {
+  $("embed").remove();
+
+  $("<embed/>", {
+    src: browser.runtime.getURL(
+      `/pdfjs/web/viewer.html?file=${encodeURIComponent(url)}`
+    ),
+    css: {
+      display: "block",
+      border: "none",
+      height: "100vh",
+      width: "100vw",
+    },
+  }).appendTo("body");
+}
+
+//check google docs=========================================================
+function checkGoogleDocs() {
+  if (!util.isGoogleDoc()) {
+    return;
+  }
+  interceptGoogleDocKeyEvent();
+}
+
+async function interceptGoogleDocKeyEvent() {
+  await util.waitUntilForever(() => $(".docs-texteventtarget-iframe")?.get(0));
+  var iframe = $(".docs-texteventtarget-iframe")?.get(0);
+
+  ["keydown", "keyup"].forEach((eventName) => {
+    iframe?.contentWindow.addEventListener(eventName, (e) => {
+      var evt = new CustomEvent(eventName, {
+        bubbles: true,
+        cancelable: false,
+      });
+      evt.key = e?.key;
+      evt.code = e?.code;
+      evt.ctrlKey = e?.ctrlKey;
+      window.dispatchEvent(evt);
+      document.dispatchEvent(evt);
+    });
   });
+}
 
-  style = $("<style/>", {
-    id: "mttstyle",
-  }).appendTo("head");
+function injectGoogleDocAnnotation() {
+  if (!util.isGoogleDoc()) {
+    return;
+  }
+  var s = document.createElement("script");
+  s.src = browser.runtime.getURL("googleDocInject.js"); //chrome.runtime.getURL("js/docs-canvas.js");
+  document.documentElement.appendChild(s);
 }
 
 // youtube================================
-async function checkYoutube() {
-  if (
-    !matchUrl(document.location.href, "www.youtube.com") ||
-    setting["detectYoutube"] == "false"
-  ) {
-    return;
-  }
-  isYoutubeDetected = true;
-  await util.injectScript("youtube.js");
-  reloadSubtitle();
-}
-
-function reloadSubtitle() {
-  window.postMessage(
-    { type: "ytPlayerSetOption", args: ["captions", "reload", true] },
-    "*"
-  );
-}
-
-function checkMouseTargetIsYoutubeSubtitle() {
-  if (!isYoutubeDetected || !$(mouseTarget).is(".ytp-caption-segment")) {
-    return;
-  }
-  // make subtitle selectable
-  $(mouseTarget)
-    .off("mousedown")
-    .on("mousedown", (e) => {
-      $(".caption-window").attr("draggable", "false");
-      e.stopPropagation();
-    });
+function checkVideo() {
+  subtitle["Youtube"].handleVideo(setting);
+  subtitle["YoutubeNoCookie"].handleVideo(setting);
 }
 
 //destruction ===================================
@@ -714,19 +909,52 @@ function loadDestructor() {
 }
 
 function destructor() {
-  clearInterval(mouseoverInterval); //clear mouseover interval
+  resetTooltipStatus();
   removePrevElement(); //remove element
   controller.abort(); //clear all event Listener by controller signal
 }
 
-function addEventHandler(eventName, callbackFunc) {
+function addEventHandler(eventName, callbackFunc, capture = true) {
   //record event for later event signal kill
-  return window.addEventListener(eventName, callbackFunc, { signal });
+  return window.addEventListener(eventName, callbackFunc, {
+    capture: capture,
+    signal,
+  });
 }
 
 function removePrevElement() {
   $("#mttstyle").remove();
-  $("#mttContainer").tooltip("dispose");
-  $("#mttContainer").remove();
-  ocrView.removeAllOcrEnv();
+  $("#mttstyleSubtitle").remove();
+  tooltip?.destroy();
+}
+
+// speech recognition ====================================================
+
+function loadSpeechRecognition() {
+  util.initSpeechRecognition(
+    (speechText, isFinal) => {
+      if (isFinal) {
+        listenText = speechText;
+        stageTooltipText(listenText, "listen");
+      }
+    },
+    () => {
+      listenText = "";
+    }
+  );
+  initSpeechRecognitionLang();
+}
+
+function initSpeechRecognitionLang() {
+  util.setSpeechRecognitionLang(setting["speechRecognitionLanguage"]);
+}
+function stopSpeechRecognitionByKey(key) {
+  if (key == setting["keySpeechRecognition"]) {
+    util.stopSpeechRecognition();
+  }
+}
+function startSpeechRecognitionByKey(key) {
+  if (key == setting["keySpeechRecognition"]) {
+    util.startSpeechRecognition();
+  }
 }

@@ -12,11 +12,10 @@ Download from [chrome web store](https://chromewebstore.google.com/detail/hmigni
 [<img alt="softpedia" height="64px" src="doc/softpedia.png" />](https://www.softpedia.com/get/Internet/Internet-Applications-Addons/Chrome-Extensions/Mouse-Tooltip-Translator-for-Chrome.shtml)
 
 # Result  
- 
+   
 ![Alt Text](doc/result_0.gif)
 ![result](doc/screenshot_3.png)
-![result](doc/screenshot_5.png)
-![result](doc/screenshot_6.png)
+![result](doc/screenshot_6.png) 
 
 # Features
 
@@ -31,11 +30,6 @@ Download from [chrome web store](https://chromewebstore.google.com/detail/hmigni
 
 # How to use
 - [How to use](https://github.com/ttop32/MouseTooltipTranslator/blob/main/doc/intro.md#how-to-use)
-
-# Change Log
-- [Change Log](https://github.com/ttop32/MouseTooltipTranslator/blob/main/doc/description.md#change-log)
-
-
 
 # Build yourself to install
 
@@ -55,77 +49,6 @@ npm run build        // or 'npm run watch' for developing
 6. Open the folder (MouseTooltipTranslator/build) as unpacked extension folder
 
 
-
-# Language locale
-- We are looking for any locale contributor. Feel free to make any pull request on bellow path.  
-  - [Locale](https://github.com/ttop32/MouseTooltipTranslator/tree/main/public/_locales)  
-- [crowdin](https://crowdin.com/project/mousetooltiptranslator) 
-- User can change this extension user interface Language by change browser UI language from   
-  - [chrome://settings/languages](chrome://settings/languages)  
- 
-
-
-| Locale code | Language (region) |
-| ------------- | ------------- |
-| ar  | Arabic |
-| am  | Amharic |
-| bg  | Bulgarian |
-| bn  | Bengali |
-| ca  | Catalan |
-| cs  | Czech |
-| da  | Danish |
-| de  | German |
-| el  | Greek |
-| en  | English |
-| en_AU  | English (Australia) |
-| en_GB  | English (Great Britain) |
-| en_US  | English (USA) |
-| es  | Spanish |
-| es_419  | Spanish (Latin America and Caribbean) |
-| et  | Estonian |
-| fa  | Persian |
-| fi  | Finnish |
-| fil  | Filipino |
-| fr  | French |
-| gu  | Gujarati |
-| he  | Hebrew |
-| hi  | Hindi |
-| hr  | Croatian |
-| hu  | Hungarian |
-| id  | Indonesian |
-| it  | Italian |
-| ja  | Japanese |
-| kn  | Kannada |
-| ko  | Korean |
-| lt  | Lithuanian |
-| lv  | Latvian |
-| ml  | Malayalam |
-| mr  | Marathi |
-| ms  | Malay |
-| nl  | Dutch |
-| no  | Norwegian |
-| pl  | Polish |
-| pt_BR  | Portuguese (Brazil) |
-| pt_PT  | Portuguese (Portugal) |
-| ro  | Romanian |
-| ru  | Russian |
-| sk  | Slovak |
-| sl  | Slovenian |
-| sr  | Serbian |
-| sv  | Swedish |
-| sw  | Swahili |
-| ta  | Tamil |
-| te  | Telugu |
-| th  | Thai |
-| tr  | Turkish |
-| uk  | Ukrainian |
-| vi  | Vietnamese |
-| zh_CN  | Chinese (China) |
-| zh_TW  | Chinese (Taiwan) |
-
-
-
-  
 # Contributors
 <!-- readme: contributors -start -->
 <table>
@@ -152,10 +75,10 @@ npm run build        // or 'npm run watch' for developing
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/tofuthefirst">
-            <img src="https://avatars.githubusercontent.com/u/68274755?v=4" width="100;" alt="tofuthefirst"/>
+        <a href="https://github.com/lg28literconvectionmicrowaveoven">
+            <img src="https://avatars.githubusercontent.com/u/68274755?v=4" width="100;" alt="lg28literconvectionmicrowaveoven"/>
             <br />
-            <sub><b>Tofuthefirst</b></sub>
+            <sub><b>Lg28literconvectionmicrowaveoven</b></sub>
         </a>
     </td>
     <td align="center">
@@ -215,9 +138,43 @@ npm run build        // or 'npm run watch' for developing
         <br />
         <sub><b>daniel k (ttop32)</b></sub></a>
       <br />
-      <sub><b>9936 words</b></sub>
+      <sub><b>9953 words</b></sub>
       <br /><sub><b><code title="Amharic">am</code></b>, <b><code title="Arabic">ar</code></b>, <b><code title="Bengali">bn</code></b>, <b><code title="Bulgarian">bg</code></b>, <b><code title="Catalan">ca</code></b>, <b><code title="Chinese Simplified">zh-CN</code></b>, <b><code title="Chinese Traditional">zh-TW</code></b>, <b><code title="Croatian">hr</code></b>, <b><code title="Czech">cs</code></b>, <b><code title="Danish">da</code></b>, <b><code title="Dutch">nl</code></b>, <b><code title="English, Australia">en-AU</code></b>, <b><code title="English, United Kingdom">en-GB</code></b>, <b><code title="English, United States">en-US</code></b>, <b><code title="Estonian">et</code></b>, <b><code title="Filipino">fil</code></b>, <b><code title="Finnish">fi</code></b>, <b><code title="French">fr</code></b>, <b><code title="German">de</code></b>, <b><code title="Greek">el</code></b>, <b><code title="Gujarati">gu-IN</code></b>, <b><code title="Hebrew">he</code></b>, <b><code title="Hindi">hi</code></b>, <b><code title="Hungarian">hu</code></b>, <b><code title="Indonesian">id</code></b>, <b><code title="Italian">it</code></b>, <b><code title="Japanese">ja</code></b>, <b><code title="Kannada">kn</code></b>, <b><code title="Korean">ko</code></b>, <b><code title="Latvian">lv</code></b>, <b><code title="Lithuanian">lt</code></b>, <b><code title="Malay">ms</code></b>, <b><code title="Malayalam">ml-IN</code></b>, <b><code title="Marathi">mr</code></b>, <b><code title="Norwegian">no</code></b>, <b><code title="Persian">fa</code></b>, <b><code title="Polish">pl</code></b>, <b><code title="Portuguese">pt-PT</code></b>, <b><code title="Portuguese, Brazilian">pt-BR</code></b>, <b><code title="Romanian">ro</code></b>, <b><code title="Russian">ru</code></b>, <b><code title="Serbian (Cyrillic)">sr</code></b>, <b><code title="Slovak">sk</code></b>, <b><code title="Slovenian">sl</code></b>, <b><code title="Spanish">es-ES</code></b>, <b><code title="Spanish, Latin America">es-419</code></b>, <b><code title="Swahili">sw</code></b>, <b><code title="Swedish">sv-SE</code></b>, <b><code title="Tamil">ta</code></b>, <b><code title="Telugu">te</code></b>, <b><code title="Thai">th</code></b>, <b><code title="Turkish">tr</code></b>, <b><code title="Ukrainian">uk</code></b>, <b><code title="Vietnamese">vi</code></b></sub>
     </td>
+    <td align="center" valign="top">
+      <a href="https://crowdin.com/profile/s-upakit"><img alt="logo" style="width: 100px" src="https://crowdin-static.downloads.crowdin.com/avatar/16487315/medium/e5ed28f1a1e2968c46d5a917a75a7852_default.png" />
+        <br />
+        <sub><b>s-upakit</b></sub></a>
+      <br />
+      <sub><b>234 words</b></sub>
+      <br /><sub><b><code title="Thai">th</code></b></sub>
+    </td>
+    <td align="center" valign="top">
+      <a href="https://crowdin.com/profile/Eduardo_91"><img alt="logo" style="width: 100px" src="https://crowdin-static.downloads.crowdin.com/avatar/16572099/medium/af20e2e5c16db087690010e85e993b35_default.png" />
+        <br />
+        <sub><b>Eduardo_91</b></sub></a>
+      <br />
+      <sub><b>207 words</b></sub>
+      <br /><sub><b><code title="Portuguese, Brazilian">pt-BR</code></b></sub>
+    </td>
+    <td align="center" valign="top">
+      <a href="https://crowdin.com/profile/Mirnyang"><img alt="logo" style="width: 100px" src="https://crowdin-static.downloads.crowdin.com/avatar/14153733/medium/9a2fe282298d66026016c71086cc6d6e.png" />
+        <br />
+        <sub><b>미르냥 (Mirnyang)</b></sub></a>
+      <br />
+      <sub><b>83 words</b></sub>
+      <br /><sub><b><code title="Korean">ko</code></b></sub>
+    </td>
+    <td align="center" valign="top">
+      <a href="https://crowdin.com/profile/helimoreira"><img alt="logo" style="width: 100px" src="https://crowdin-static.downloads.crowdin.com/avatar/16569873/medium/ec603f8be2e762a0e3afaac901c15b7e_default.png" />
+        <br />
+        <sub><b>helimoreira</b></sub></a>
+      <br />
+      <sub><b>73 words</b></sub>
+      <br /><sub><b><code title="Portuguese, Brazilian">pt-BR</code></b></sub>
+    </td>
+  </tr>
+  <tr>
     <td align="center" valign="top">
       <a href="https://crowdin.com/profile/nejdetacar"><img alt="logo" style="width: 100px" src="https://crowdin-static.downloads.crowdin.com/avatar/12677379/medium/a652b6c7e95226407d84e96ea1a2e86f.jpg" />
         <br />
@@ -234,10 +191,23 @@ npm run build        // or 'npm run watch' for developing
       <sub><b>13 words</b></sub>
       <br /><sub><b><code title="English, Australia">en-AU</code></b></sub>
     </td>
+    <td align="center" valign="top">
+      <a href="https://crowdin.com/profile/TTT01"><img alt="logo" style="width: 100px" src="https://crowdin-static.downloads.crowdin.com/avatar/16469337/medium/6ff0dcfb321853011aba8cfc4abcdc82.png" />
+        <br />
+        <sub><b>IT SUPPORT (TTT01)</b></sub></a>
+      <br />
+      <sub><b>3 words</b></sub>
+      <br /><sub><b><code title="Thai">th</code></b></sub>
+    </td>
   </tr>
 </table><a href="https://crowdin.com/project/mousetooltiptranslator" target="_blank">Translate in Crowdin 🚀</a>
 <!-- CROWDIN-CONTRIBUTORS-END -->
+  
+- We are looking for any localization contributor. Feel free to make contribution on crowdin.  
 
+
+# Change Log
+- [Change Log](https://github.com/ttop32/MouseTooltipTranslator/blob/main/doc/description.md#change-log)
 
 # Privacy policy
 - [Privacy policy](https://github.com/ttop32/MouseTooltipTranslator/blob/main/doc/privacy_policy.md)

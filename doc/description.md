@@ -19,6 +19,15 @@ Mouseover Translate Any Language At Once
 English, Russian, Japanese, Chinese and so on
 
 # Change Log
+- 0.1.148
+  - Korean locale (contributed by 미르냥 (Mirnyang))
+  - Brazilian locale (contributed by helimoreira and Eduardo_91)
+- 0.1.147
+  - Fix writing (request by Enlight432 )
+  - add buy me coffee page
+- 0.1.146
+  - Fix youtube subtitle jquery conflict  (request by anh5983 )
+  - Thai locale (contributed by s-upakit)
 - 0.1.145
   - Fix log exposer  (request by KomodoLegend18 )
 - 0.1.144
